@@ -9,10 +9,22 @@ import { MobileDebugPanel } from './MobileDebugPanel';
 import { useEffect, useRef } from 'react';
 
 export function ChatBot({ apiKey, initialMessage, onClose, open = true, enableDebug = false }) {
-  const { messages, isLoading, isTyping, sendMessage } = useChat(apiKey, initialMessage);
+  const { messages, isLoading, isTyping, sendMessage, showInitialTyping, typingMessageId, onTypingComplete, resetChat } = useChat(apiKey, initialMessage);
   const viewport = useViewport();
   const keyboard = useVirtualKeyboard();
   const chatContainerRef = useRef(null); // Ref for the scroll container
+  
+  // Función debug para resetear chat desde consola
+  useEffect(() => {
+    if (enableDebug) {
+      window.resetChatDebug = resetChat;
+      console.log('🔧 Debug mode enabled. Use window.resetChatDebug() to reset chat');
+      
+      return () => {
+        delete window.resetChatDebug;
+      };
+    }
+  }, [resetChat, enableDebug]);
   
   const { 
     isMobile, 
@@ -47,7 +59,7 @@ export function ChatBot({ apiKey, initialMessage, onClose, open = true, enableDe
 
   const chatContent = (
     <>
-      <ChatHeader ref={headerRef} onClose={onClose} />      <div 
+      <ChatHeader ref={headerRef} onClose={onClose} onResetChat={resetChat} />      <div 
         ref={chatContainerRef}
         className="flex-1 bg-bgDarkBlue min-h-0 chat-window-container"
         style={isMobile ? {
@@ -66,6 +78,9 @@ export function ChatBot({ apiKey, initialMessage, onClose, open = true, enableDe
           isKeyboardOpen={keyboard.isKeyboardVisible}
           scrollContainerRef={chatContainerRef}
           isTyping={isTyping}
+          showInitialTyping={showInitialTyping}
+          typingMessageId={typingMessageId}
+          onTypingComplete={onTypingComplete}
         />
       </div>
       <ChatInput 

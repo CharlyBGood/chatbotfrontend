@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -12,7 +12,8 @@ const initialBotMessage = {
 function generateSessionId() {
   return 'xxxxxxxxyxxxxyxxxyxxxx'.replace(/[xy]/g, function(c) {
     const r = Math.random() * 16 | 0;
-    return r.toString(16);
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
   });
 }
 
@@ -38,12 +39,21 @@ export function useChat() {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-
+    // Estado simple para controlar solo el typing del mensaje inicial
+  const [showInitialTyping, setShowInitialTyping] = useState(parsedMessages.length === 0);
+  
+  // Estado para controlar el typing de nuevos mensajes del bot
+  const [typingMessageId, setTypingMessageId] = useState(null);
   const sendMessage = async (message) => {
     try {
       setIsLoading(true);
       const userMsg = { content: message, isBot: false };
       setMessages(prev => [...prev, userMsg]);
+      
+      // Garantizar que el usuario pueda ver su mensaje
+      setTimeout(() => {
+        if (window.scrollToBottom) window.scrollToBottom();
+      }, 100);
 
       // Mostrar indicador de typing después de un pequeño delay
       setTimeout(() => {
@@ -72,22 +82,36 @@ export function useChat() {
       
       // Ocultar typing antes de mostrar la respuesta
       setIsTyping(false);
-      
-      const botReply = {
+        const botReply = {
         content: data.text || 'Sin respuesta',
         isBot: true,
+        id: Date.now() + Math.random(), // ID único para el mensaje
+        shouldShowTyping: true, // Marcar que debe mostrar typing
       };
-      // Agregar la respuesta del bot
+      
+      // Activar typing para este mensaje específico
+      setTypingMessageId(botReply.id);
+      
+      // Agregar la respuesta del bot de forma simple
       const updatedMessages = [...messages, userMsg, botReply];
       setMessages(updatedMessages);
+      
+      // Garantizar scroll para la respuesta del bot
+      setTimeout(() => {
+        if (window.scrollToBottom) window.scrollToBottom();
+      }, 200);
+      
       // Guardar solo los mensajes reales en sessionStorage
       const storedMessages = updatedMessages.filter(m => !m.isInitial);
-      sessionStorage.setItem('chatMessages', JSON.stringify(storedMessages));
-    } catch (error) {
+      sessionStorage.setItem('chatMessages', JSON.stringify(storedMessages));    } catch (error) {
       setIsTyping(false); // Ocultar typing en caso de error
       setMessages(prev => [
         ...prev,
-        { content: `Lo sentimos, hubo un error: ${error.message}`, isBot: true },
+        { 
+          content: `Lo sentimos, hubo un error: ${error.message}`, 
+          isBot: true,
+          id: Date.now() + Math.random()
+        },
       ]);
     } finally {
       setIsLoading(false);
@@ -98,23 +122,54 @@ export function useChat() {
   useEffect(() => {
     const realMessages = messages.filter(m => !m.isInitial);
     sessionStorage.setItem('chatMessages', JSON.stringify(realMessages));
-  }, [messages]);
+  }, [messages]);  // Función para marcar que terminó el typing de un mensaje específico
+  const onTypingComplete = useCallback((messageId) => {
+    if (typingMessageId === messageId) {
+      setTypingMessageId(null);
+      
+      // Forzar scroll al final después de que termine el typing
+      setTimeout(() => {
+        if (window.scrollToBottom) {
+          window.scrollToBottom();
+        }
+      }, 100);
+    }
+  }, [typingMessageId]);
 
   // Permitir resetear el chat (opcional, útil para UX)
-  const resetChat = () => {
+  const resetChat = useCallback(() => {
     setMessages([initialBotMessage]);
-    setIsTyping(false); // Reset typing state
+    setIsTyping(false);
+    setShowInitialTyping(true); // Mostrar typing effect al resetear
     sessionStorage.removeItem('chatMessages');
     const newId = generateSessionId();
     setSessionId(newId);
-    sessionStorage.setItem('sessionId', newId);
-  };
+    sessionStorage.setItem('sessionId', newId);  }, [setMessages, setIsTyping, setShowInitialTyping, setSessionId]);
 
+  // Exponer resetChat en window para debugging (solo en desarrollo)
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      window.resetChat = resetChat;
+      // Solo mostrar el tip una vez
+      if (!window.chatTipShown) {
+        console.log('💡 Para probar el efecto de typing, ejecuta: window.resetChat()');
+        window.chatTipShown = true;
+      }
+    }
+    return () => {
+      if (import.meta.env.DEV) {
+        delete window.resetChat;
+      }
+    };
+  }, [resetChat]);
   return {
     messages,
     isLoading,
     isTyping,
+    showInitialTyping,
+    typingMessageId,
+    onTypingComplete,
     sendMessage,
-    resetChat, // expuesto para usar en la UI si lo deseas
+    resetChat,
   };
 }

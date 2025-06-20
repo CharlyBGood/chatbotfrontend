@@ -14,7 +14,7 @@ function App() {
   }, []);
 
   return (
-    <div className="m-0 w-full h-screen flex flex-col items-center justify-center bg-justGray">
+    <div className="m-0 w-full h-screen flex flex-col items-center justify-center bg-bgDarkBlue text-justGray font-sans">
       {/* Enhanced launcher section */}
       <div className="text-center mb-8">
         <h1 className='text-xl bold mt-10 font-stretch-ultra-condensed'>

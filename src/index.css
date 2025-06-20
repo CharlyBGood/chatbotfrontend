@@ -242,6 +242,22 @@ html body .chat-window-container::-webkit-scrollbar-thumb:active {
 
 /* ======================================== */
 
+/* Estilos para el cursor parpadeante del efecto de typing */
+.typing-cursor {
+  color: #44b0de;
+  animation: blink 1s infinite;
+  font-weight: normal;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
 @supports (scrollbar-color: red blue) {
   * {
     scrollbar-color: hsla(220 67% 4% 0.81 / 1) hsla(194, 66%, 44%, 0.782);
@@ -262,4 +278,9 @@ body,
   height: 100%;
   font-family: "Federo", sans-serif;
   font-size: 15px;
+}
+
+/* Efecto de sombreado personalizado para texto */
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
 }
