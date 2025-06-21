@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test SegurBotWidget Definition</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Test SegurBotWidget Definition</h1>
+        
+        <div id="test-results">
+            <div class="status info">⏳ Cargando script...</div>
+        </div>
+        
+        <div id="widget-info">
+            <h3>Información del Widget:</h3>
+            <pre id="widget-details">Esperando carga...</pre>
+        </div>
+    </div>
+
+    <!-- Cargar el widget local -->
+    <script src="./dist/segurbot-widget.umd.js"></script>
+    <script>
+        console.log('🚀 Iniciando test de definición...');
+        
+        const resultsDiv = document.getElementById('test-results');
+        const detailsDiv = document.getElementById('widget-details');
+        
+        function addResult(message, type) {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        // Test inmediato
+        setTimeout(() => {
+            console.log('📋 Verificando definición de SegurBotWidget...');
+            
+            // Test 1: ¿Existe SegurBotWidget?
+            if (typeof SegurBotWidget !== 'undefined') {
+                addResult('✅ SegurBotWidget está definido', 'success');
+                console.log('✅ SegurBotWidget encontrado:', SegurBotWidget);
+            } else {
+                addResult('❌ SegurBotWidget NO está definido', 'error');
+                console.error('❌ SegurBotWidget no encontrado');
+            }
+            
+            // Test 2: ¿Está en window?
+            if (typeof window.SegurBotWidget !== 'undefined') {
+                addResult('✅ window.SegurBotWidget está disponible', 'success');
+            } else {
+                addResult('❌ window.SegurBotWidget NO está disponible', 'error');
+            }
+            
+            // Test 3: ¿Es una función constructor?
+            if (typeof SegurBotWidget === 'function') {
+                addResult('✅ SegurBotWidget es una función constructor', 'success');
+            } else {
+                addResult('❌ SegurBotWidget NO es una función constructor', 'error');
+            }
+            
+            // Test 4: Intentar crear una instancia
+            try {
+                const widget = new SegurBotWidget({
+                    apiUrl: 'https://test.com/api',
+                    title: 'Test Widget'
+                });
+                addResult('✅ Se puede crear una instancia de SegurBotWidget', 'success');
+                
+                // Mostrar detalles
+                detailsDiv.textContent = `
+Tipo: ${typeof SegurBotWidget}
+Constructor: ${SegurBotWidget.name}
+Métodos disponibles: ${Object.getOwnPropertyNames(SegurBotWidget.prototype).join(', ')}
+Instancia creada: ${widget.constructor.name}
+Opciones configuradas: ${JSON.stringify(widget.options, null, 2)}
+                `.trim();
+                
+            } catch (error) {
+                addResult(`❌ Error al crear instancia: ${error.message}`, 'error');
+                console.error('❌ Error al crear instancia:', error);
+                
+                detailsDiv.textContent = `Error: ${error.message}`;
+            }
+            
+            // Test 5: Verificar objetos globales
+            const globalObjects = [];
+            if (typeof window.SegurBotWidget !== 'undefined') globalObjects.push('window.SegurBotWidget');
+            if (typeof window.segurBotWidget !== 'undefined') globalObjects.push('window.segurBotWidget (instancia)');
+            if (typeof window.SegurBotConfig !== 'undefined') globalObjects.push('window.SegurBotConfig');
+            
+            if (globalObjects.length > 0) {
+                addResult(`✅ Objetos globales disponibles: ${globalObjects.join(', ')}`, 'info');
+            } else {
+                addResult('⚠️ No se encontraron objetos globales del widget', 'error');
+            }
+            
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -620,44 +620,48 @@ class SegurBotWidget {
   }
 }
 
-// Función de inicialización global
-window.SegurBotWidget = SegurBotWidget
+// Asegurar que SegurBotWidget esté disponible globalmente INMEDIATAMENTE
+if (typeof window !== 'undefined') {
+  window.SegurBotWidget = SegurBotWidget;
+}
 
 // Auto-inicialización si hay configuración global o data-attributes
-if (window.SegurBotConfig) {
+if (typeof window !== 'undefined' && window.SegurBotConfig) {
   const widget = new SegurBotWidget(window.SegurBotConfig)
   widget.init()
   window.segurBotWidget = widget
 }
 
 // NUEVA FUNCIONALIDAD: Auto-detección desde script tag
-document.addEventListener('DOMContentLoaded', function() {
-  // Buscar el script tag que cargó este widget
-  const scriptTag = document.querySelector('script[src*="segurbot-widget"]')
-  
-  if (scriptTag && !window.segurBotWidget) {
-    // Extraer configuración de data-attributes
-    const config = {
-      apiUrl: scriptTag.dataset.apiUrl || scriptTag.getAttribute('data-api-url'),
-      title: scriptTag.dataset.title || scriptTag.getAttribute('data-title') || 'SegurBot',
-      initialMessage: scriptTag.dataset.message || scriptTag.getAttribute('data-message') || '¡Hola! ¿En qué puedo ayudarte?',
-      position: scriptTag.dataset.position || scriptTag.getAttribute('data-position') || 'bottom-right',
-      autoOpen: (scriptTag.dataset.autoOpen || scriptTag.getAttribute('data-auto-open')) === 'true',
-      enableDebug: (scriptTag.dataset.debug || scriptTag.getAttribute('data-debug')) === 'true'
-    }
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', function() {
+    // Buscar el script tag que cargó este widget
+    const scriptTag = document.querySelector('script[src*="segurbot-widget"]')
     
-    // Solo inicializar si hay apiUrl
-    if (config.apiUrl) {
-      const widget = new SegurBotWidget(config)
-      widget.init()
-      window.segurBotWidget = widget
+    if (scriptTag && !window.segurBotWidget) {
+      // Extraer configuración de data-attributes
+      const config = {
+        apiUrl: scriptTag.dataset.apiUrl || scriptTag.getAttribute('data-api-url'),
+        title: scriptTag.dataset.title || scriptTag.getAttribute('data-title') || 'SegurBot',
+        initialMessage: scriptTag.dataset.message || scriptTag.getAttribute('data-message') || '¡Hola! ¿En qué puedo ayudarte?',
+        position: scriptTag.dataset.position || scriptTag.getAttribute('data-position') || 'bottom-right',
+        autoOpen: (scriptTag.dataset.autoOpen || scriptTag.getAttribute('data-auto-open')) === 'true',
+        enableDebug: (scriptTag.dataset.debug || scriptTag.getAttribute('data-debug')) === 'true'
+      }
       
-      console.log('✅ SegurBot Widget auto-inicializado desde script tag')
-    } else {
-      console.warn('⚠️ SegurBot: data-api-url es requerido para auto-inicialización')
+      // Solo inicializar si hay apiUrl
+      if (config.apiUrl) {
+        const widget = new SegurBotWidget(config)
+        widget.init()
+        window.segurBotWidget = widget
+        
+        console.log('✅ SegurBot Widget auto-inicializado desde script tag')
+      } else {
+        console.warn('⚠️ SegurBot: data-api-url es requerido para auto-inicialización')
+      }
     }
-  }
-})
+  })
+}
 
 // Exportar para uso como módulo
 export default SegurBotWidget
