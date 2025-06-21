@@ -17,15 +17,13 @@ export default defineConfig({
       name: 'SegurBotWidget',
       fileName: 'segurbot-widget',
       formats: ['umd']
-    },
-    rollupOptions: {
+    },    rollupOptions: {
       external: [],
       output: {
         globals: {},
         // Configuración específica para UMD
         format: 'umd',
-        name: 'SegurBotWidget',
-        exports: 'default'
+        name: 'SegurBotWidget'
       }
     },
     cssCodeSplit: false,
