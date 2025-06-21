@@ -1,14 +1,14 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 import { resolve } from 'path'
 import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   define: {
     'process.env.NODE_ENV': '"production"'
-  },
-  build: {
+  },  build: {
     outDir: 'dist',
     emptyOutDir: false, // No vaciar el directorio dist
     lib: {
