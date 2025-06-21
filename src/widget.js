@@ -220,8 +220,7 @@ class SegurBotWidget {
     `
     
     document.head.appendChild(styleSheet)
-  }
-  // Renderizar el widget React
+  }  // Renderizar el widget React
   renderWidget() {
     if (!this.container) return
 
@@ -231,44 +230,44 @@ class SegurBotWidget {
         apiUrl: this.options.apiUrl,
         initialMessage: this.options.initialMessage,
         title: this.options.title,
-        open: this.isOpen,
-        enableDebug: this.options.enableDebug,
-        onClose: () => this.close()
+        // NO pasar 'open' para permitir que SegurBot maneje su propio estado del botón flotante
+        enableDebug: this.options.enableDebug
+        // NO pasar onClose tampoco ya que SegurBot maneja su propio estado
       })
     )
 
-    // Aplicar clase inicial
-    this.container.className = this.isOpen ? 'widget-open' : 'widget-closed'
+    // Remover aplicación de clase inicial ya que SegurBot maneja su propio estado
   }
-
-  // Abrir el widget
+  // Abrir el widget (ahora delega a SegurBot)
   open() {
     if (!this.initialized) {
       console.warn('Widget no está inicializado. Llama a init() primero.')
       return
     }
     
-    this.isOpen = true
-    this.container.className = 'widget-open'
-    this.rerender()
-  }
-
-  // Cerrar el widget
-  close() {
-    this.isOpen = false
-    this.container.className = 'widget-closed'
-    this.rerender()
-  }
-
-  // Toggle del widget
-  toggle() {
-    if (this.isOpen) {
-      this.close()
-    } else {
-      this.open()
+    // Buscar el botón flotante y hacer clic para abrir
+    const button = this.container.querySelector('[aria-label*="chat"]')
+    if (button && button.getAttribute('aria-label').includes('Abrir')) {
+      button.click()
     }
   }
 
+  // Cerrar el widget (ahora delega a SegurBot)
+  close() {
+    // Buscar el botón flotante y hacer clic para cerrar
+    const button = this.container.querySelector('[aria-label*="chat"]')
+    if (button && button.getAttribute('aria-label').includes('Cerrar')) {
+      button.click()
+    }
+  }
+
+  // Toggle del widget (ahora delega a SegurBot)
+  toggle() {
+    const button = this.container.querySelector('[aria-label*="chat"]')
+    if (button) {
+      button.click()
+    }
+  }
   // Re-renderizar el widget
   rerender() {
     if (this.root) {
@@ -277,9 +276,8 @@ class SegurBotWidget {
           apiUrl: this.options.apiUrl,
           initialMessage: this.options.initialMessage,
           title: this.options.title,
-          open: this.isOpen,
+          // NO pasar 'open' para permitir que SegurBot maneje su propio estado
           enableDebug: this.options.enableDebug,
-          onClose: () => this.close(),
           theme: this.options.theme
         })
       )
