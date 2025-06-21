@@ -11,17 +11,21 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    emptyOutDir: false, // No vaciar el directorio dist
+    emptyOutDir: false,
     lib: {
       entry: resolve(fileURLToPath(new URL('.', import.meta.url)), 'src/widget.js'),
       name: 'SegurBotWidget',
-      fileName: () => `segurbot-widget.umd.js`,
+      fileName: 'segurbot-widget',
       formats: ['umd']
     },
     rollupOptions: {
       external: [],
       output: {
-        globals: {}
+        globals: {},
+        // Configuración específica para UMD
+        format: 'umd',
+        name: 'SegurBotWidget',
+        exports: 'default'
       }
     },
     cssCodeSplit: false,

@@ -663,5 +663,10 @@ if (typeof document !== 'undefined') {
   })
 }
 
-// Exportar para uso como módulo
+// Asegurar que SegurBotWidget esté disponible globalmente INMEDIATAMENTE
+if (typeof window !== 'undefined') {
+  window.SegurBotWidget = SegurBotWidget;
+}
+
+// Exportar para uso como módulo (solo default para UMD)
 export default SegurBotWidget
