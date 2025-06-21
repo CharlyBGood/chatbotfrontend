@@ -55,19 +55,14 @@ class SegurBotWidget {
     // Aplicar estilos de posicionamiento
     this.applyContainerStyles()
   }
-
   // Aplicar estilos al contenedor
   applyContainerStyles() {
-    const styles = {
-      position: 'fixed',
-      zIndex: '9999',
-      width: this.options.width,
-      height: this.options.height,
-      transition: 'all 0.3s ease',
-      ...this.getPositionStyles()
-    }
-
-    Object.assign(this.container.style, styles)
+    // NO aplicar estilos de posicionamiento al container principal
+    // porque SegurBot maneja su propio posicionamiento del botón flotante
+    this.container.style.position = 'relative'
+    this.container.style.zIndex = '1'
+    this.container.style.width = 'auto'
+    this.container.style.height = 'auto'
   }
 
   // Obtener estilos de posición según configuración
@@ -132,7 +127,7 @@ class SegurBotWidget {
       .right-12 { right: 3rem !important; }
       .p-2 { padding: 0.5rem !important; }
       .p-3 { padding: 0.75rem !important; }
-      .rounded-full { border-radius: 9999px !important; }
+      .rounded-full { border-radius: 50% !important; }
       .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important; }
       .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important; }
       .border-4 { border-width: 4px !important; }
@@ -143,11 +138,11 @@ class SegurBotWidget {
       .translate-y-10 { transform: translateY(2.5rem) !important; }
       .scale-100 { transform: scale(1) !important; }
       .scale-110 { transform: scale(1.1) !important; }
-      .transition-all { transition-property: all !important; }
+      .transition-all { transition-property: all !important; transition-duration: 1000ms !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important; }
       .duration-1000 { transition-duration: 1000ms !important; }
       .ease-in-out { transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important; }
-      .transform { transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)) !important; }
-      .text-2xl { font-size: 1.5rem; line-height: 2rem !important; }
+      .transform { /* Handled by individual transform classes */ }
+      .text-2xl { font-size: 1.5rem !important; line-height: 2rem !important; }
       .flex { display: flex !important; }
       .flex-col { flex-direction: column !important; }
       .w-80 { width: 20rem !important; }
@@ -160,26 +155,53 @@ class SegurBotWidget {
         filter: drop-shadow(0 0 6px rgba(68, 176, 222, 0.6)) !important; 
       }
 
-      /* Widget container specific styles */
+      /* Floating button specific styles - Override any conflicting styles */
+      #${this.options.containerId} button[aria-label*="chat"] {
+        position: fixed !important;
+        z-index: 9999 !important;
+        bottom: 1.5rem !important;
+        right: 1rem !important;
+        background-color: var(--color-bgDarkBlue) !important;
+        color: var(--color-lightBlue) !important;
+        border: 4px solid var(--color-lightBlue) !important;
+        border-radius: 50% !important;
+        padding: 0.75rem !important;
+        width: auto !important;
+        height: auto !important;
+        min-width: 3.5rem !important;
+        min-height: 3.5rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+        filter: drop-shadow(0 0 6px rgba(68, 176, 222, 0.6)) !important;
+        transition: all 1000ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: translateY(0px) scale(1) !important;
+      }
+
+      #${this.options.containerId} button[aria-label*="chat"]:hover {
+        background-color: var(--color-Black) !important;
+        color: var(--color-lightBlueHover) !important;
+        transform: translateY(0px) scale(1.1) !important;
+      }
+
+      /* Chat window positioning */
+      #${this.options.containerId} .fixed.bottom-25 {
+        position: fixed !important;
+        bottom: 6.25rem !important;
+        right: 3rem !important;
+        z-index: 50 !important;
+      }/* Widget container specific styles */
       #${this.options.containerId} {
+        /* Minimal container styles - let SegurBot handle positioning */
         font-family: 'Federo', sans-serif;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        border-radius: 12px;
-        overflow: hidden;
-        background: #03070f;
         position: relative;
-      }
-      
-      #${this.options.containerId}.widget-closed {
-        transform: scale(0);
-        opacity: 0;
-        pointer-events: none;
-      }
-      
-      #${this.options.containerId}.widget-open {
-        transform: scale(1);
-        opacity: 1;
-        pointer-events: all;
+        width: auto;
+        height: auto;
+        z-index: 1;
       }
 
       /* Special drop shadow effect for the floating button */
@@ -224,19 +246,30 @@ class SegurBotWidget {
   renderWidget() {
     if (!this.container) return
 
+    console.log('🔧 Renderizando SegurBot en container:', this.container.id)
+    
     this.root = createRoot(this.container)
     this.root.render(
       React.createElement(SegurBot, {
         apiUrl: this.options.apiUrl,
         initialMessage: this.options.initialMessage,
         title: this.options.title,
-        // NO pasar 'open' para permitir que SegurBot maneje su propio estado del botón flotante
         enableDebug: this.options.enableDebug
-        // NO pasar onClose tampoco ya que SegurBot maneja su propio estado
       })
     )
 
-    // Remover aplicación de clase inicial ya que SegurBot maneja su propio estado
+    // Verificar después de renderizar
+    setTimeout(() => {
+      console.log('📋 Estado después de renderizar:')
+      console.log('- Container children:', this.container.children.length)
+      console.log('- Container HTML:', this.container.innerHTML.substring(0, 200))
+      const button = this.container.querySelector('[aria-label*="chat"]')
+      console.log('- Botón encontrado:', !!button)
+      if (button) {
+        const styles = window.getComputedStyle(button)
+        console.log('- Botón visible:', styles.display !== 'none' && styles.visibility !== 'hidden' && parseFloat(styles.opacity) > 0)
+      }
+    }, 1000)
   }
   // Abrir el widget (ahora delega a SegurBot)
   open() {

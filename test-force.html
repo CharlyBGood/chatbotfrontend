@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Forzado</title>
+    <style>
+        #debug { background: #f0f0f0; padding: 15px; margin: 15px; border-radius: 5px; }
+        .btn { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Test Forzado SegurBot</h1>
+    
+    <button class="btn" onclick="forceShow()">🔥 FORZAR MOSTRAR BOTÓN</button>
+    <button class="btn" onclick="inspectAll()">🔍 INSPECCIONAR TODO</button>
+    
+    <div id="debug"></div>
+
+    <script>
+        function forceShow() {
+            console.log('🔥 Intentando forzar visibilidad...');
+            
+            // Buscar el container
+            const container = document.getElementById('segurbot-widget');
+            if (container) {
+                console.log('✅ Container encontrado');
+                
+                // Forzar estilos en todos los elementos
+                container.style.cssText = 'position: relative !important; display: block !important; visibility: visible !important; opacity: 1 !important;';
+                
+                // Buscar y forzar visibilidad de todos los botones
+                const allButtons = container.querySelectorAll('button');
+                console.log(`📱 Encontrados ${allButtons.length} botones`);
+                
+                allButtons.forEach((btn, i) => {
+                    console.log(`Botón ${i}:`, btn.className, btn.getAttribute('aria-label'));
+                    btn.style.cssText = `
+                        position: fixed !important;
+                        bottom: 20px !important;
+                        right: 20px !important;
+                        z-index: 99999 !important;
+                        display: block !important;
+                        visibility: visible !important;
+                        opacity: 1 !important;
+                        background-color: #1e40af !important;
+                        color: white !important;
+                        border: 2px solid #3b82f6 !important;
+                        border-radius: 50% !important;
+                        width: 60px !important;
+                        height: 60px !important;
+                        font-size: 24px !important;
+                        cursor: pointer !important;
+                        transform: none !important;
+                        transition: none !important;
+                    `;
+                });
+                
+                // Forzar visibilidad de todos los elementos con clases específicas
+                const elementsWithClasses = container.querySelectorAll('[class*="fixed"], [class*="opacity"], [class*="translate"]');
+                elementsWithClasses.forEach(el => {
+                    el.style.cssText += 'position: fixed !important; opacity: 1 !important; transform: none !important; visibility: visible !important; display: block !important;';
+                });
+                
+            } else {
+                console.log('❌ Container no encontrado');
+            }
+        }
+        
+        function inspectAll() {
+            const debug = document.getElementById('debug');
+            let html = '<h3>🔍 Inspección Completa:</h3>';
+            
+            // Container
+            const container = document.getElementById('segurbot-widget');
+            if (container) {
+                html += `<h4>Container:</h4><pre>${container.outerHTML.substring(0, 500)}</pre>`;
+            }
+            
+            // Todos los elementos con atributos de chat
+            const chatElements = document.querySelectorAll('[aria-label*="chat"], [title*="chat"], button');
+            html += `<h4>Elementos con chat (${chatElements.length}):</h4>`;
+            chatElements.forEach((el, i) => {
+                html += `<pre>Elemento ${i}: ${el.tagName} - ${el.outerHTML.substring(0, 200)}</pre>`;
+            });
+            
+            debug.innerHTML = html;
+        }
+        
+        // Auto-ejecutar después de cargar
+        setTimeout(() => {
+            console.log('🚀 Auto-ejecutando tests...');
+            inspectAll();
+            setTimeout(() => {
+                forceShow();
+            }, 2000);
+        }, 3000);
+    </script>
+
+    <script 
+        src="./dist/segurbot-widget.umd.js" 
+        data-api-url="http://localhost:8080/api/chat" 
+        data-title="Test Forzado" 
+        data-message="¡Hola!"
+        data-debug="true"
+    ></script>
+</body>
+</html>
