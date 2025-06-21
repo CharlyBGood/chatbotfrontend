@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Local Widget</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 12px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Local SegurBot Widget</h1>
+        <p>This page tests the locally built widget to verify the CSS fix.</p>
+        
+        <div id="status" style="background: #f0f0f0; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <h3>Status:</h3>
+            <div id="widget-status">Loading...</div>
+        </div>
+        
+        <button onclick="checkWidget()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 10px;">
+            Check Widget Status
+        </button>
+        
+        <button onclick="toggleWidget()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 10px;">
+            Toggle Widget
+        </button>
+    </div>
+
+    <script>
+        function checkWidget() {
+            const statusDiv = document.getElementById('widget-status');
+            let status = '';
+            
+            if (window.SegurBotWidget) {
+                status += '✅ SegurBotWidget class loaded<br>';
+            } else {
+                status += '❌ SegurBotWidget class not found<br>';
+            }
+            
+            if (window.segurBotWidget) {
+                status += '✅ Widget instance exists<br>';
+                status += `Initialized: ${window.segurBotWidget.initialized ? '✅' : '❌'}<br>`;
+                status += `Is Open: ${window.segurBotWidget.isOpen ? '✅' : '❌'}<br>`;
+            } else {
+                status += '❌ Widget instance not found<br>';
+            }
+            
+            const button = document.querySelector('[aria-label*="chat" i]');
+            if (button) {
+                status += '✅ Floating button found in DOM<br>';
+                const styles = window.getComputedStyle(button);
+                status += `Button background: ${styles.backgroundColor}<br>`;
+                status += `Button visibility: ${styles.visibility}<br>`;
+                status += `Button opacity: ${styles.opacity}<br>`;
+            } else {
+                status += '❌ Floating button not found<br>';
+            }
+            
+            statusDiv.innerHTML = status;
+        }
+        
+        function toggleWidget() {
+            if (window.segurBotWidget) {
+                window.segurBotWidget.toggle();
+                setTimeout(checkWidget, 100);
+            } else {
+                alert('Widget not available');
+            }
+        }
+        
+        // Auto-check after load
+        setTimeout(() => {
+            checkWidget();
+        }, 2000);
+    </script>
+
+    <!-- Load the LOCAL widget -->
+    <script 
+        src="./dist/segurbot-widget.umd.js" 
+        data-api-url="http://localhost:8080/api/chat" 
+        data-title="Test Local SegurBot" 
+        data-message="¡Hola! Este es un test local."
+        data-debug="true"
+    ></script>
+</body>
+</html>

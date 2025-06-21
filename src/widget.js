@@ -94,8 +94,7 @@ class SegurBotWidget {
       default:
         return { bottom: offset, right: offset }
     }
-  }
-  // Inyectar estilos CSS necesarios
+  }  // Inyectar estilos CSS necesarios
   injectStyles() {
     const existingStyles = document.getElementById('segurbot-widget-styles')
     if (existingStyles) return
@@ -103,13 +102,68 @@ class SegurBotWidget {
     const styleSheet = document.createElement('style')
     styleSheet.id = 'segurbot-widget-styles'
     styleSheet.textContent = `
+      /* Define Tailwind CSS custom colors used by SegurBot */
+      :root {
+        --color-Blue: #253878;
+        --color-bgDarkBlue: #03070f;
+        --color-Black: rgba(3, 7, 15, 0.81);
+        --color-justGray: #7a7a7a;
+        --color-blueGray: #d3dde6;
+        --color-lightBlue: #44b0de;
+        --color-lightBlueHover: #3a9ecb;
+        --color-Golden: #f7d16e;
+      }
+
+      /* Essential Tailwind utility classes for SegurBot */
+      .bg-bgDarkBlue { background-color: var(--color-bgDarkBlue) !important; }
+      .hover\\:bg-Black:hover { background-color: var(--color-Black) !important; }
+      .bg-Black { background-color: var(--color-Black) !important; }
+      .text-lightBlue { color: var(--color-lightBlue) !important; }
+      .hover\\:text-lightBlueHover:hover { color: var(--color-lightBlueHover) !important; }
+      .border-lightBlue { border-color: var(--color-lightBlue) !important; }
+      .text-justGray { color: var(--color-justGray) !important; }
+
+      /* Essential positioning and display utilities */
+      .fixed { position: fixed !important; }
+      .z-40 { z-index: 40 !important; }
+      .z-50 { z-index: 50 !important; }
+      .bottom-16 { bottom: 4rem !important; }
+      .bottom-10 { bottom: 2.5rem !important; }
+      .right-4 { right: 1rem !important; }
+      .right-6 { right: 1.5rem !important; }
+      .right-12 { right: 3rem !important; }
+      .p-2 { padding: 0.5rem !important; }
+      .p-3 { padding: 0.75rem !important; }
+      .rounded-full { border-radius: 9999px !important; }
+      .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important; }
+      .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important; }
+      .border-4 { border-width: 4px !important; }
+      .cursor-pointer { cursor: pointer !important; }
+      .opacity-0 { opacity: 0 !important; }
+      .opacity-100 { opacity: 1 !important; }
+      .translate-y-0 { transform: translateY(0px) !important; }
+      .translate-y-10 { transform: translateY(2.5rem) !important; }
+      .scale-100 { transform: scale(1) !important; }
+      .scale-110 { transform: scale(1.1) !important; }
+      .transition-all { transition-property: all !important; }
+      .duration-1000 { transition-duration: 1000ms !important; }
+      .ease-in-out { transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important; }
+      .transform { transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)) !important; }
+      .text-2xl { font-size: 1.5rem; line-height: 2rem !important; }
+      .flex { display: flex !important; }
+      .flex-col { flex-direction: column !important; }
+      .w-80 { width: 20rem !important; }
+      .w-96 { width: 24rem !important; }
+      .h-\\[32em\\] { height: 32em !important; }
+      .min-h-0 { min-height: 0px !important; }
+
+      /* Widget container specific styles */
       #${this.options.containerId} {
         font-family: 'Federo', sans-serif;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         border-radius: 12px;
         overflow: hidden;
         background: #03070f;
-        /* Preservar el diseño original de SegurBot */
         position: relative;
       }
       
@@ -125,9 +179,17 @@ class SegurBotWidget {
         pointer-events: all;
       }
 
-      /* El botón launcher de SegurBot se mantiene como está definido originalmente */
-      #${this.options.containerId} .launcher-button {
-        /* No sobreescribir estilos del botón original */
+      /* Special drop shadow effect for the floating button */
+      #${this.options.containerId} button[aria-label*="chat"] {
+        filter: drop-shadow(0 0 6px rgba(68, 176, 222, 0.6));
+      }
+
+      /* Responsive for mobile */
+      @media (max-width: 640px) {
+        .sm\\:bottom-10 { bottom: 2.5rem !important; }
+        .sm\\:right-6 { right: 1.5rem !important; }
+        .sm\\:p-3 { padding: 0.75rem !important; }
+        .sm\\:w-96 { width: 24rem !important; }
       }
 
       /* Responsive para móviles */
