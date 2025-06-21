@@ -71,12 +71,14 @@ function SegurBot({
           initialMessage={initialMessage}
           title={title}
           onClose={handleClose}
-          enableDebug={enableDebug}
-        />
+          enableDebug={enableDebug}        />
       )}
     </>
   );
 }
+
+// Añadir displayName para mejor debugging en DevTools
+SegurBot.displayName = 'SegurBot';
 
 export default SegurBot;
 export { SegurBot };

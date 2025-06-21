@@ -13,7 +13,6 @@ function App() {
           Podes probar el bot abajo a la derecha
         </h1>
       </div>
-      
       <SegurBot />
     </div>
   );

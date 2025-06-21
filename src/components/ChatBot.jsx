@@ -130,3 +130,6 @@ export function ChatBot({ apiUrl, apiKey, initialMessage, title, /* theme, */ on
     </div>
   );
 }
+
+// Añadir displayName para DevTools
+ChatBot.displayName = 'ChatBot';

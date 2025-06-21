@@ -189,3 +189,6 @@ export function ChatMessage({ message, isBot, shouldShowTyping = false, onTyping
     </div>
   );
 }
+
+// Añadir displayName para DevTools
+ChatMessage.displayName = 'ChatMessage';
