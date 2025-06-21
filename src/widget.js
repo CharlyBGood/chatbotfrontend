@@ -121,9 +121,7 @@ class SegurBotWidget {
       .text-lightBlue { color: var(--color-lightBlue) !important; }
       .hover\\:text-lightBlueHover:hover { color: var(--color-lightBlueHover) !important; }
       .border-lightBlue { border-color: var(--color-lightBlue) !important; }
-      .text-justGray { color: var(--color-justGray) !important; }
-
-      /* Essential positioning and display utilities */
+      .text-justGray { color: var(--color-justGray) !important; }      /* Essential positioning and display utilities */
       .fixed { position: fixed !important; }
       .z-40 { z-index: 40 !important; }
       .z-50 { z-index: 50 !important; }
@@ -156,6 +154,11 @@ class SegurBotWidget {
       .w-96 { width: 24rem !important; }
       .h-\\[32em\\] { height: 32em !important; }
       .min-h-0 { min-height: 0px !important; }
+
+      /* Special Tailwind arbitrary value classes */
+      .drop-shadow-\\[0_0_6px_\\#44b0de99\\] { 
+        filter: drop-shadow(0 0 6px rgba(68, 176, 222, 0.6)) !important; 
+      }
 
       /* Widget container specific styles */
       #${this.options.containerId} {
