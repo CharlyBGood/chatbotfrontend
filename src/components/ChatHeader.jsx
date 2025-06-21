@@ -2,7 +2,7 @@ import { ChatFavicon } from './faviconcomponent/ChatFavicon';
 import { forwardRef } from 'react';
 import { useViewport } from '../hooks/useViewport';
 
-export const ChatHeader = forwardRef(function ChatHeader({ onClose, onResetChat }, ref) {
+export const ChatHeader = forwardRef(function ChatHeader({ title = "SegurBot", onClose, onResetChat }, ref) {
   const { isMobile } = useViewport();
   
   return (
@@ -15,7 +15,7 @@ export const ChatHeader = forwardRef(function ChatHeader({ onClose, onResetChat 
     >
       <div className="flex items-center gap-2 w-85 m-auto relative p-2 ">
         <ChatFavicon alt="Logo de la Maschio y Asociados" />        <div className='flex flex-col items-center justify-center w-full'>
-          <h1 className="flex-1 text-xl font-semibold text-blueGray text-center mx-auto tracking-widest drop-shadow-md">SegurBot</h1>
+          <h1 className="flex-1 text-xl font-semibold text-blueGray text-center mx-auto tracking-widest drop-shadow-md">{title}</h1>
           <a target='_blank' className='text-blueGray hover:text-lightBlue' href="https://asegurando.online">Maschio y Asociados</a>
         </div>
           {/* Botón de resetear chat */}

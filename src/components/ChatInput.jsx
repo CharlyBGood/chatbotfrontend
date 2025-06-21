@@ -6,13 +6,12 @@ export const ChatInput = forwardRef(function ChatInput({ onSendMessage, isLoadin
   const [input, setInput] = useState('');
   const internalInputRef = useRef(null);
   const { inputRef: positioningInputRef, ensureInputVisibility } = useInputPositioning(isMobile);
-
   // Combinar refs
   useEffect(() => {
     if (positioningInputRef.current && internalInputRef.current) {
       positioningInputRef.current = internalInputRef.current;
     }
-  }, []);
+  }, [positioningInputRef]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,12 +19,11 @@ export const ChatInput = forwardRef(function ChatInput({ onSendMessage, isLoadin
     onSendMessage(input);
     setInput('');
   };
-
   useEffect(() => {
     if (!isLoading && input === '' && internalInputRef.current) {
       internalInputRef.current.focus();
     }
-  }, [isLoading]);
+  }, [isLoading, input]);
 
   useEffect(() => {
     if (internalInputRef.current) {

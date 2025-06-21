@@ -1,46 +1,60 @@
-# Maschio Chat Widget
+# SegurBot - Frontend Chatbot
 
-A customizable chat widget for insurance consultations.
+Frontend interactivo para el chatbot SegurBot de Maschio y Asociados, especializado en consultas de seguros.
 
-## Installation
+## 🚀 Características
 
-1. Add the widget script to your HTML:
-```html
-<script src="https://your-cdn-url/chatbot-widget.umd.js"></script>
+- **Interfaz moderna y responsiva** - Optimizada para móviles y desktop
+- **Enlaces automáticos** - Detecta URLs en mensajes y las convierte en enlaces clickeables
+- **Tratamiento especial para WhatsApp** - Enlaces de WhatsApp se muestran como "WhatsApp de Maschio y Asociados"
+- **Efectos visuales suaves** - Fade-in para mensajes del bot
+- **Botón de reset** - Permite reiniciar la conversación desde el header
+- **Soporte markdown** - Compatible con texto enriquecido en mensajes
+
+## 🛠️ Instalación y Desarrollo
+
+```bash
+# Instalar dependencias
+npm install
+
+# Ejecutar en modo desarrollo
+npm run dev
+
+# Construir para producción
+npm run build
+
+# Vista previa de build
+npm run preview
 ```
 
-2. Add a container for the widget:
-```html
-<div id="maschio-chat-widget"></div>
+## 🏗️ Arquitectura
+
+### Componentes principales
+- `SegurBot.jsx` - Componente principal del chatbot
+- `ChatBot.jsx` - Lógica central de chat y manejo de estado
+- `ChatHeader.jsx` - Header con título y botón de reset
+- `ChatWindow.jsx` - Ventana de mensajes
+- `ChatMessage.jsx` - Renderizado de mensajes individuales con enlaces automáticos
+- `ChatInput.jsx` - Input de mensajes con manejo móvil
+
+### Hooks personalizados
+- `useChat.js` - Manejo de estado de chat y comunicación con API
+- `useViewport.js` - Detección de viewport y dispositivo móvil
+- `useVirtualKeyboard.js` - Manejo de teclado virtual en móviles
+- `useInputPositioning.js` - Posicionamiento del input en móviles
+
+## 🌐 API
+
+El frontend se comunica con el backend a través de:
+```
+POST /api/chat
+{
+  "message": "mensaje del usuario"
+}
 ```
 
-3. Initialize the widget:
-```javascript
-new MaschioChatWidget({
-  apiKey: 'your-api-key',
-  theme: {
-    primary: '#253878',
-    bgDark: '#03070f',
-    blueGray: '#d3dde6',
-    lightBlue: '#44b0de',
-    golden: '#f7d16e'
-  },
-  initialMessage: '¡Bienvenido! ¿En qué puedo ayudarte?',
-  containerId: 'maschio-chat-widget'
-});
-```
+## 📱 Soporte móvil
 
-## Configuration Options
-
-- `apiKey` (required): Your Hugging Face API key
-- `theme` (optional): Custom color scheme
-- `initialMessage` (optional): Custom welcome message
-- `containerId` (optional): Custom container ID
-
-## Styling
-
-The widget is fully responsive and self-contained. Custom themes can be applied through the configuration options.
-
-## Browser Support
-
-Supports all modern browsers (Chrome, Firefox, Safari, Edge).
+- Detección automática de dispositivos móviles
+- Ajuste dinámico del layout para teclado virtual
+- Optimización de UX para pantallas táctiles

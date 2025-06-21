@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌐 SegurBot Widget - Test desde URL Externa</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .header h1 {
+      color: #2d3748;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+    .step {
+      background: #f7fafc;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border-left: 4px solid #4299e1;
+    }
+    .step h3 {
+      margin-top: 0;
+      color: #2d3748;
+    }
+    .url-input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e2e8f0;
+      border-radius: 6px;
+      font-size: 16px;
+      margin: 10px 0;
+    }
+    .url-input:focus {
+      outline: none;
+      border-color: #4299e1;
+    }
+    .btn {
+      background: #4299e1;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 10px 10px 0;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background: #3182ce;
+    }
+    .btn:disabled {
+      background: #a0aec0;
+      cursor: not-allowed;
+    }
+    .success {
+      background: #f0fff4;
+      border: 2px solid #48bb78;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 15px 0;
+    }
+    .warning {
+      background: #fef5e7;
+      border: 2px solid #ed8936;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 15px 0;
+    }
+    .code {
+      background: #2d3748;
+      color: #e2e8f0;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      word-break: break-all;
+      margin: 10px 0;
+    }
+    #status {
+      margin: 20px 0;
+    }
+    .widget-test-area {
+      background: #edf2f7;
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+      margin: 30px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🧪 Test SegurBot Widget Online</h1>
+      <p>Prueba tu widget desde tu URL de Vercel</p>
+    </div>
+
+    <div class="step">
+      <h3>📋 Paso 1: Obtén tu URL de Vercel</h3>
+      <ol>
+        <li>Ve a <a href="https://vercel.com/dashboard" target="_blank">vercel.com/dashboard</a></li>
+        <li>Encuentra tu proyecto <strong>botfrontend</strong></li>
+        <li>Copia la URL (ej: <code>https://botfrontend-abc123.vercel.app</code>)</li>
+      </ol>
+    </div>
+
+    <div class="step">
+      <h3>🔗 Paso 2: Ingresa tu URL de Vercel</h3>
+      <input 
+        type="url" 
+        id="vercelUrl" 
+        class="url-input" 
+        placeholder="https://tu-proyecto.vercel.app"
+        value=""
+      >
+      <div>
+        <button class="btn" onclick="testWidgetUrl()">🔍 Verificar Widget</button>
+        <button class="btn" onclick="loadWidget()" id="loadBtn" disabled>🚀 Cargar Widget</button>
+      </div>
+    </div>
+
+    <div id="status"></div>
+
+    <div class="step">
+      <h3>⚙️ Paso 3: Configurar API (Opcional)</h3>
+      <input 
+        type="url" 
+        id="apiUrl" 
+        class="url-input" 
+        placeholder="https://tu-backend.com/api/chat"
+        value="http://localhost:8080/api/chat"
+      >
+      <p><small>Deja la URL por defecto si quieres probar solo la carga del widget</small></p>
+    </div>
+
+    <div class="widget-test-area">
+      <h3>🎯 Área de Prueba del Widget</h3>
+      <p>Una vez cargado, el widget aparecerá como un botón flotante</p>
+      <div id="widgetContainer"></div>
+    </div>
+
+    <div class="step">
+      <h3>✅ Código de Integración Generado</h3>
+      <div id="generatedCode">
+        <div class="code">
+          Ingresa tu URL de Vercel arriba para generar el código de integración
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let currentScript = null;
+
+    function updateStatus(message, type = 'info') {
+      const statusEl = document.getElementById('status');
+      const className = type === 'success' ? 'success' : type === 'error' ? 'warning' : 'step';
+      statusEl.innerHTML = `<div class="${className}">${message}</div>`;
+    }
+
+    function testWidgetUrl() {
+      const url = document.getElementById('vercelUrl').value.trim();
+      
+      if (!url) {
+        updateStatus('❌ Por favor ingresa tu URL de Vercel', 'error');
+        return;
+      }
+
+      // Limpiar URL (remover trailing slash)
+      const cleanUrl = url.replace(/\/$/, '');
+      document.getElementById('vercelUrl').value = cleanUrl;
+
+      const widgetUrl = cleanUrl + '/segurbot-widget.umd.js';
+      
+      updateStatus('🔍 Verificando si el widget está disponible...', 'info');
+
+      // Hacer un fetch para verificar si existe
+      fetch(widgetUrl, { method: 'HEAD' })
+        .then(response => {
+          if (response.ok) {
+            updateStatus('✅ ¡Widget encontrado! Ya puedes cargarlo.', 'success');
+            document.getElementById('loadBtn').disabled = false;
+            updateGeneratedCode(cleanUrl);
+          } else {
+            updateStatus(`❌ Widget no encontrado (${response.status}). Verifica que tu proyecto esté desplegado correctamente.`, 'error');
+            document.getElementById('loadBtn').disabled = true;
+          }
+        })
+        .catch(error => {
+          updateStatus(`❌ Error al verificar: ${error.message}. Verifica la URL.`, 'error');
+          document.getElementById('loadBtn').disabled = true;
+        });
+    }
+
+    function loadWidget() {
+      const vercelUrl = document.getElementById('vercelUrl').value.trim().replace(/\/$/, '');
+      const apiUrl = document.getElementById('apiUrl').value.trim();
+      
+      if (!vercelUrl) {
+        updateStatus('❌ Ingresa tu URL de Vercel primero', 'error');
+        return;
+      }
+
+      // Remover widget anterior si existe
+      if (currentScript) {
+        currentScript.remove();
+        // También remover el contenedor del widget si existe
+        const existingWidget = document.getElementById('segurbot-widget');
+        if (existingWidget) {
+          existingWidget.remove();
+        }
+      }
+
+      updateStatus('🚀 Cargando widget...', 'info');
+
+      // Crear nuevo script tag
+      currentScript = document.createElement('script');
+      currentScript.src = vercelUrl + '/segurbot-widget.umd.js';
+      currentScript.dataset.apiUrl = apiUrl;
+      currentScript.dataset.title = 'SegurBot Test Online';
+      currentScript.dataset.message = '¡Hola! Estoy funcionando desde Vercel 🚀';
+      currentScript.dataset.position = 'bottom-right';
+      currentScript.dataset.debug = 'true';
+
+      currentScript.onload = function() {
+        updateStatus('✅ ¡Widget cargado exitosamente! Busca el botón flotante.', 'success');
+      };
+
+      currentScript.onerror = function() {
+        updateStatus('❌ Error al cargar el widget. Verifica la URL.', 'error');
+      };
+
+      document.body.appendChild(currentScript);
+    }
+
+    function updateGeneratedCode(url) {
+      const apiUrl = document.getElementById('apiUrl').value.trim();
+      const code = `&lt;script 
+  src="${url}/segurbot-widget.umd.js"
+  data-api-url="${apiUrl}"
+  data-title="Mi SegurBot"
+  data-message="¡Hola! ¿En qué puedo ayudarte?"
+&gt;&lt;/script&gt;`;
+
+      document.getElementById('generatedCode').innerHTML = `
+        <div class="code">${code}</div>
+        <button class="btn" onclick="copyToClipboard(\`${code.replace(/&lt;/g, '<').replace(/&gt;/g, '>')}\`)">📋 Copiar Código</button>
+      `;
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        updateStatus('✅ Código copiado al portapapeles', 'success');
+      });
+    }
+
+    // Auto-detectar si estamos en una URL de Vercel
+    if (window.location.hostname.includes('vercel.app')) {
+      const currentUrl = window.location.origin;
+      document.getElementById('vercelUrl').value = currentUrl;
+      updateStatus('🎯 URL de Vercel detectada automáticamente. Haz clic en "Verificar Widget".', 'success');
+    }
+  </script>
+
+</body>
+</html>

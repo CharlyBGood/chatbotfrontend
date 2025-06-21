@@ -5,11 +5,13 @@ import { ChatInput } from './ChatInput';
 import { useViewport } from '../hooks/useViewport';
 import { useVirtualKeyboard } from '../hooks/useVirtualKeyboard';
 import { MobileChatLayout } from './MobileChatLayout';
-import { MobileDebugPanel } from './MobileDebugPanel';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, lazy, Suspense } from 'react';
 
-export function ChatBot({ apiKey, initialMessage, onClose, open = true, enableDebug = false }) {
-  const { messages, isLoading, isTyping, sendMessage, showInitialTyping, typingMessageId, onTypingComplete, resetChat } = useChat(apiKey, initialMessage);
+// Importación lazy del MobileDebugPanel para reducir el bundle size
+const MobileDebugPanel = lazy(() => import('./MobileDebugPanel').then(module => ({ default: module.MobileDebugPanel })));
+
+export function ChatBot({ apiUrl, apiKey, initialMessage, title, /* theme, */ onClose, open = true, enableDebug = false }) {
+  const { messages, isLoading, isTyping, sendMessage, showInitialTyping, typingMessageId, onTypingComplete, resetChat } = useChat(apiUrl || apiKey, initialMessage);
   const viewport = useViewport();
   const keyboard = useVirtualKeyboard();
   const chatContainerRef = useRef(null); // Ref for the scroll container
@@ -59,7 +61,7 @@ export function ChatBot({ apiKey, initialMessage, onClose, open = true, enableDe
 
   const chatContent = (
     <>
-      <ChatHeader ref={headerRef} onClose={onClose} onResetChat={resetChat} />      <div 
+      <ChatHeader ref={headerRef} title={title} onClose={onClose} onResetChat={resetChat} />      <div 
         ref={chatContainerRef}
         className="flex-1 bg-bgDarkBlue min-h-0 chat-window-container"
         style={isMobile ? {
@@ -107,11 +109,14 @@ export function ChatBot({ apiKey, initialMessage, onClose, open = true, enableDe
       container.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
   if (isMobile) {
     return (
       <>
-        <MobileDebugPanel enabled={enableDebug} />
+        {enableDebug && (
+          <Suspense fallback={null}>
+            <MobileDebugPanel enabled={enableDebug} />
+          </Suspense>
+        )}
         <MobileChatLayout isMobile={isMobile}>
           {chatContent}
         </MobileChatLayout>

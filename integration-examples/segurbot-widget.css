@@ -1,0 +1,51 @@
+/* src/styles/segurbot-widget.css */
+
+/* Estilos personalizados para el widget */
+.segurbot-widget-container {
+  /* Contenedor del botón */
+}
+
+.segurbot-widget-button {
+  /* Personalizar el botón */
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.segurbot-widget-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.segurbot-widget-loading {
+  /* Estilo del estado de carga */
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .segurbot-widget-button {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Tema oscuro */
+@media (prefers-color-scheme: dark) {
+  .segurbot-widget-button {
+    background-color: #1f2937;
+    border: 1px solid #374151;
+  }
+  
+  .segurbot-widget-button:hover {
+    background-color: #111827;
+  }
+}

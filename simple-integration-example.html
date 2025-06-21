@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejemplo Simple - SegurBot Widget</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    h1 { color: #333; text-align: center; }
+    .example {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border-left: 4px solid #44b0de;
+    }
+    .code {
+      background: #2d3748;
+      color: #e2e8f0;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🤖 SegurBot Widget - Integración Simple</h1>
+    
+    <div class="example">
+      <h2>✨ ¡Solo 1 línea de código!</h2>
+      <p>Este widget se inicializa automáticamente con los data-attributes del script:</p>
+      
+      <div class="code">
+&lt;script 
+  src="./dist/segurbot-widget.umd.js"
+  data-api-url="http://localhost:8080/api/chat"
+  data-title="Mi Asistente Personal"
+  data-message="¡Hola! Soy tu asistente. ¿En qué puedo ayudarte?"
+  data-position="bottom-right"
+&gt;&lt;/script&gt;
+      </div>
+    </div>
+    
+    <div class="example">
+      <h2>🎯 Características</h2>
+      <ul>
+        <li>✅ <strong>Diseño original</strong> - Mantiene el botón con icono (sin texto)</li>
+        <li>✅ <strong>Auto-inicialización</strong> - No requiere JavaScript adicional</li>
+        <li>✅ <strong>Configuración simple</strong> - Solo data-attributes</li>
+        <li>✅ <strong>Responsive</strong> - Desktop y móvil optimizado</li>
+        <li>✅ <strong>Plug & Play</strong> - Funciona en cualquier sitio web</li>
+      </ul>
+    </div>
+    
+    <div class="example">
+      <h2>⚙️ Configuración Disponible</h2>
+      <div class="code">
+&lt;script 
+  src="https://tu-cdn.com/segurbot-widget.js"
+  data-api-url="https://tu-backend.com/api/chat"     &lt;!-- REQUERIDO --&gt;
+  data-title="Título del Chat"                       &lt;!-- Opcional --&gt;
+  data-message="Mensaje inicial personalizado"       &lt;!-- Opcional --&gt;
+  data-position="bottom-right"                       &lt;!-- bottom-right, bottom-left, center --&gt;
+  data-auto-open="false"                             &lt;!-- true/false --&gt;
+  data-debug="false"                                 &lt;!-- true/false --&gt;
+&gt;&lt;/script&gt;
+      </div>
+    </div>
+    
+    <div class="example">
+      <h2>🌐 Uso en Diferentes Sitios</h2>
+      
+      <h3>WordPress:</h3>
+      <div class="code">
+&lt;!-- En footer.php o mediante plugin de código personalizado --&gt;
+&lt;script 
+  src="https://mi-cdn.com/segurbot-widget.js"
+  data-api-url="https://mi-backend.com/api/chat"
+  data-title="Soporte WordPress"
+&gt;&lt;/script&gt;
+      </div>
+      
+      <h3>Shopify:</h3>
+      <div class="code">
+&lt;!-- En theme.liquid --&gt;
+&lt;script 
+  src="{{ 'segurbot-widget.js' | asset_url }}"
+  data-api-url="{{ shop.metafields.chatbot.api_url }}"
+  data-title="Asistente de Ventas"
+&gt;&lt;/script&gt;
+      </div>
+      
+      <h3>HTML Estático:</h3>
+      <div class="code">
+&lt;!-- Antes del cierre de &lt;/body&gt; --&gt;
+&lt;script 
+  src="./segurbot-widget.js"
+  data-api-url="https://api.ejemplo.com/chat"
+&gt;&lt;/script&gt;
+      </div>
+    </div>
+    
+    <p style="text-align: center; color: #666; margin-top: 40px;">
+      <strong>🎉 ¡El widget está funcionando en esta página!</strong><br>
+      Mira el botón flotante en la esquina inferior derecha con el diseño original.
+    </p>
+  </div>
+
+  <!-- ✨ WIDGET EN ACCIÓN - SOLO ESTA LÍNEA -->
+  <script 
+    src="./dist/segurbot-widget.umd.js"
+    data-api-url="http://localhost:8080/api/chat"
+    data-title="SegurBot Demo"
+    data-message="¡Hola! Soy SegurBot en modo demo. ¿En qué puedo ayudarte?"
+    data-position="bottom-right"
+  ></script>
+</body>
+</html>

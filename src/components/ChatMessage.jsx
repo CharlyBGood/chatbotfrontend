@@ -10,11 +10,11 @@ export function ChatMessage({ message, isBot, shouldShowTyping = false, onTyping
 
   // Ref para evitar warnings del linter manteniendo la función actualizada
   const onTypingCompleteRef = useRef(onTypingComplete);
-
   // Actualizar la ref cuando cambie la función
   useEffect(() => {
     onTypingCompleteRef.current = onTypingComplete;
   }, [onTypingComplete]);
+
   // Función para procesar URLs en el texto
   const processMessageWithLinks = (text) => {
     if (!text || typeof text !== 'string') return text;

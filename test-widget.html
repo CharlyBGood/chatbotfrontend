@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test SegurBot Widget</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f0f2f5;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 { color: #333; text-align: center; }
+    .btn {
+      background: #44b0de;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      margin: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .btn:hover { background: #3a9ecb; }
+    .status { 
+      padding: 10px; 
+      margin: 10px 0; 
+      border-radius: 4px; 
+      background: #e8f4fd; 
+      border-left: 4px solid #44b0de;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🤖 SegurBot Widget - Test</h1>
+    
+    <div class="status" id="status">
+      Listo para probar el widget...
+    </div>
+    
+    <div>
+      <button class="btn" onclick="initWidget()">Inicializar Widget</button>
+      <button class="btn" onclick="openWidget()">Abrir</button>
+      <button class="btn" onclick="closeWidget()">Cerrar</button>
+      <button class="btn" onclick="toggleWidget()">Toggle</button>
+      <button class="btn" onclick="destroyWidget()">Destruir</button>
+    </div>
+    
+    <hr style="margin: 30px 0;">
+    
+    <h3>Información del Widget:</h3>
+    <ul>
+      <li><strong>API URL:</strong> http://localhost:8080/api/chat</li>
+      <li><strong>Posición:</strong> bottom-right</li>
+      <li><strong>Auto-open:</strong> false</li>
+      <li><strong>Responsive:</strong> Sí</li>
+    </ul>
+    
+    <p><strong>Nota:</strong> Asegúrate de que tu backend esté ejecutándose en http://localhost:8080</p>
+  </div>
+
+  <!-- Incluir el widget -->
+  <script src="./dist/segurbot-widget.umd.js"></script>
+  
+  <script>
+    let widget = null;
+    const status = document.getElementById('status');
+    
+    function updateStatus(message) {
+      status.textContent = message;
+    }
+    
+    function initWidget() {
+      try {
+        if (widget) {
+          widget.destroy();
+        }
+        
+        widget = new SegurBotWidget({
+          apiUrl: 'http://localhost:8080/api/chat',
+          initialMessage: '¡Hola! Soy SegurBot. ¿En qué puedo ayudarte?',
+          position: 'bottom-right',
+          autoOpen: false,
+          enableDebug: true
+        });
+        
+        widget.init();
+        updateStatus('✅ Widget inicializado correctamente');
+      } catch (error) {
+        updateStatus('❌ Error al inicializar: ' + error.message);
+        console.error('Error:', error);
+      }
+    }
+    
+    function openWidget() {
+      if (!widget) {
+        updateStatus('⚠️ Primero inicializa el widget');
+        return;
+      }
+      widget.open();
+      updateStatus('📖 Widget abierto');
+    }
+    
+    function closeWidget() {
+      if (!widget) {
+        updateStatus('⚠️ Primero inicializa el widget');
+        return;
+      }
+      widget.close();
+      updateStatus('📕 Widget cerrado');
+    }
+    
+    function toggleWidget() {
+      if (!widget) {
+        updateStatus('⚠️ Primero inicializa el widget');
+        return;
+      }
+      widget.toggle();
+      updateStatus('🔄 Widget toggle');
+    }
+    
+    function destroyWidget() {
+      if (!widget) {
+        updateStatus('⚠️ No hay widget para destruir');
+        return;
+      }
+      widget.destroy();
+      widget = null;
+      updateStatus('🗑️ Widget destruido');
+    }
+    
+    // Log para debug
+    console.log('SegurBotWidget disponible:', typeof SegurBotWidget);
+  </script>
+</body>
+</html>

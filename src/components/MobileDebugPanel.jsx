@@ -25,9 +25,7 @@ export function MobileDebugPanel({ enabled = false }) {
         height: keyboard.keyboardHeight,
         adjustedHeight: keyboard.adjustedHeight
       }
-    };
-
-    setLogs(prev => [...prev.slice(-10), newLog]); // Mantener solo los últimos 10 logs
+    };    setLogs(prev => [...prev.slice(-10), newLog]); // Mantener solo los últimos 10 logs
   }, [
     enabled,
     viewport.width,
@@ -35,8 +33,10 @@ export function MobileDebugPanel({ enabled = false }) {
     viewport.visualViewportHeight,
     viewport.isKeyboardOpen,
     viewport.availableHeight,
+    viewport.isMobile,
     keyboard.isKeyboardVisible,
-    keyboard.keyboardHeight
+    keyboard.keyboardHeight,
+    keyboard.adjustedHeight
   ]);
 
   if (!enabled || !viewport.isMobile) return null;

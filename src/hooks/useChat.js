@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -17,7 +17,16 @@ function generateSessionId() {
   });
 }
 
-export function useChat() {
+export function useChat(apiUrl, customInitialMessage) {
+  // Determinar la URL de la API
+  const CHAT_API_URL = apiUrl || API_URL;
+    // Usar mensaje personalizado si se proporciona
+  const botMessage = useMemo(() => 
+    customInitialMessage ? 
+      { content: customInitialMessage, isBot: true, isInitial: true } : 
+      initialBotMessage,
+    [customInitialMessage]
+  );
   // Cargar historial real (sin mensaje inicial) desde sessionStorage
   const stored = sessionStorage.getItem('chatMessages');
   const parsedMessages = stored ? JSON.parse(stored) : [];
@@ -31,10 +40,9 @@ export function useChat() {
     }
     return id;
   });
-
   // Estado del chat incluye el mensaje visual inicial (solo para UI)
   const [messages, setMessages] = useState([
-    initialBotMessage,
+    botMessage,
     ...parsedMessages
   ]);
   const [isLoading, setIsLoading] = useState(false);
@@ -68,7 +76,7 @@ export function useChat() {
         content: m.content,
       }));
 
-      const response = await fetch(API_URL, {
+      const response = await fetch(CHAT_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: chatHistory, sessionId }),
@@ -135,16 +143,16 @@ export function useChat() {
       }, 100);
     }
   }, [typingMessageId]);
-
   // Permitir resetear el chat (opcional, útil para UX)
   const resetChat = useCallback(() => {
-    setMessages([initialBotMessage]);
+    setMessages([botMessage]);
     setIsTyping(false);
     setShowInitialTyping(true); // Mostrar typing effect al resetear
     sessionStorage.removeItem('chatMessages');
     const newId = generateSessionId();
     setSessionId(newId);
-    sessionStorage.setItem('sessionId', newId);  }, [setMessages, setIsTyping, setShowInitialTyping, setSessionId]);
+    sessionStorage.setItem('sessionId', newId);
+  }, [botMessage, setMessages, setIsTyping, setShowInitialTyping, setSessionId]);
 
   // Exponer resetChat en window para debugging (solo en desarrollo)
   useEffect(() => {
