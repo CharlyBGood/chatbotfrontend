@@ -97,3 +97,6 @@ export const ChatInput = forwardRef(function ChatInput({ onSendMessage, isLoadin
     </footer>
   );
 });
+
+// Añadir displayName para DevTools
+ChatInput.displayName = 'ChatInput';

@@ -3,11 +3,11 @@ import { ChatBot } from './ChatBot';
 import { FaComments } from 'react-icons/fa';
 import { FaCircleExclamation } from 'react-icons/fa6';
 
-function SegurBot({ 
-  apiUrl, 
-  apiKey, 
-  initialMessage, 
-  title = "SegurBot - Asistente Virtual",
+function SegurBot({
+  apiUrl,
+  apiKey,
+  initialMessage,
+  title = "SegurBot",
   open: controlledOpen,
   onClose,
   enableDebug = false
@@ -64,14 +64,14 @@ function SegurBot({
           )}
         </button>
       )}
-        {/* Chat window */}
-      {open && (        <ChatBot
-          apiUrl={apiUrl}
-          apiKey={apiKey}
-          initialMessage={initialMessage}
-          title={title}
-          onClose={handleClose}
-          enableDebug={enableDebug}        />
+      {/* Chat window */}
+      {open && (<ChatBot
+        apiUrl={apiUrl}
+        apiKey={apiKey}
+        initialMessage={initialMessage}
+        title={title}
+        onClose={handleClose}
+        enableDebug={enableDebug} />
       )}
     </>
   );

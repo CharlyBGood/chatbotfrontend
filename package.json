@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:network": "vite --host",
     "build": "vite build && vite build --config vite.widget-umd.config.js",
     "build:widget": "vite build --config vite.widget-umd.config.js",
     "build:app": "vite build",

@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig(({ mode }) => ({
   plugins: [
     react({
-      // Configuración mínima para compatibilidad
+      // Configuración para DevTools y HMR
       fastRefresh: true,
       jsxRuntime: 'automatic'
     }), 
@@ -19,13 +19,19 @@ export default defineConfig(({ mode }) => ({
   },
   server: {
     port: 5173,
+    host: true, // Exponer en la red local
     open: true,
-    cors: true
+    cors: true,
+    hmr: {
+      overlay: true
+    }
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'react/jsx-runtime']
   },
   esbuild: {
-    keepNames: true
+    keepNames: true,
+    // Mejor debugging para componentes
+    jsxDev: mode === 'development'
   }
 }))
