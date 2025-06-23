@@ -284,3 +284,103 @@ body,
 .text-shadow {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
 }
+
+/* Estilos globales para contenido markdown en mensajes del bot */
+.bot-message-content {
+  line-height: 1.5;
+}
+
+.bot-message-content > *:first-child {
+  margin-top: 0 !important;
+}
+
+.bot-message-content > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Headings con espaciado controlado */
+.bot-message-content h1,
+.bot-message-content h2,
+.bot-message-content h3,
+.bot-message-content h4,
+.bot-message-content h5,
+.bot-message-content h6 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.bot-message-content h1 { font-size: 1.25rem; }
+.bot-message-content h2 { font-size: 1.125rem; }
+.bot-message-content h3 { font-size: 1rem; }
+
+/* Párrafos con espaciado mínimo */
+.bot-message-content p {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Listas con espaciado compacto */
+.bot-message-content ul,
+.bot-message-content ol {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-left: 1.25rem;
+}
+
+.bot-message-content li {
+  margin-bottom: 0.125rem;
+}
+
+.bot-message-content ul {
+  list-style-type: disc;
+}
+
+.bot-message-content ol {
+  list-style-type: decimal;
+}
+
+/* Código inline y bloques */
+.bot-message-content code {
+  background-color: #f3f4f6;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.bot-message-content pre {
+  background-color: #f3f4f6;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  overflow-x: auto;
+}
+
+.bot-message-content pre code {
+  background-color: transparent;
+  padding: 0;
+  font-size: 0.875rem;
+}
+
+/* Blockquotes */
+.bot-message-content blockquote {
+  border-left: 4px solid var(--color-lightBlue);
+  padding-left: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-style: italic;
+}
+
+/* Enlaces personalizados */
+.bot-message-content a {
+  color: var(--color-lightBlue);
+  text-decoration: underline;
+  font-weight: 600;
+  transition: color 0.2s ease-in-out;
+}
+
+.bot-message-content a:hover {
+  color: #3b82f6;
+}

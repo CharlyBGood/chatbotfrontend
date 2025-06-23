@@ -5,13 +5,11 @@ import { FaCircleExclamation } from 'react-icons/fa6';
 
 function SegurBot({
   apiUrl,
-  apiKey,
   initialMessage,
   title = "SegurBot",
   open: controlledOpen,
   onClose,
   enableDebug = false
-  /* theme = {} */
 }) {
   const [open, setOpen] = useState(controlledOpen !== undefined ? controlledOpen : false);
   const [isVisible, setIsVisible] = useState(false);
@@ -64,10 +62,8 @@ function SegurBot({
           )}
         </button>
       )}
-      {/* Chat window */}
-      {open && (<ChatBot
+      {/* Chat window */}      {open && (<ChatBot
         apiUrl={apiUrl}
-        apiKey={apiKey}
         initialMessage={initialMessage}
         title={title}
         onClose={handleClose}

@@ -51,8 +51,7 @@ export function useChat(apiUrl, customInitialMessage) {
   const [showInitialTyping, setShowInitialTyping] = useState(parsedMessages.length === 0);
   
   // Estado para controlar el typing de nuevos mensajes del bot
-  const [typingMessageId, setTypingMessageId] = useState(null);
-  const sendMessage = async (message) => {
+  const [typingMessageId, setTypingMessageId] = useState(null);  const sendMessage = async (message) => {
     try {
       setIsLoading(true);
       const userMsg = { content: message, isBot: false };
@@ -90,7 +89,7 @@ export function useChat(apiUrl, customInitialMessage) {
       
       // Ocultar typing antes de mostrar la respuesta
       setIsTyping(false);
-        const botReply = {
+      const botReply = {
         content: data.text || 'Sin respuesta',
         isBot: true,
         id: Date.now() + Math.random(), // ID único para el mensaje
@@ -111,8 +110,10 @@ export function useChat(apiUrl, customInitialMessage) {
       
       // Guardar solo los mensajes reales en sessionStorage
       const storedMessages = updatedMessages.filter(m => !m.isInitial);
-      sessionStorage.setItem('chatMessages', JSON.stringify(storedMessages));    } catch (error) {
-      setIsTyping(false); // Ocultar typing en caso de error
+      sessionStorage.setItem('chatMessages', JSON.stringify(storedMessages));
+      
+    } catch (error) {
+      setIsTyping(false);
       setMessages(prev => [
         ...prev,
         { 
@@ -138,21 +139,50 @@ export function useChat(apiUrl, customInitialMessage) {
       // Forzar scroll al final después de que termine el typing
       setTimeout(() => {
         if (window.scrollToBottom) {
-          window.scrollToBottom();
-        }
+          window.scrollToBottom();        }
       }, 100);
     }
   }, [typingMessageId]);
+  // Función para resetear sesión en el backend
+  const resetSessionOnBackend = useCallback(async (oldSessionId) => {
+    try {
+      const response = await fetch(`${CHAT_API_URL}/reset`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: oldSessionId }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('🔄 Sesión reseteada en backend:', data.message);
+      } else {
+        console.warn('⚠️ Error al resetear sesión en backend:', response.status);
+      }
+    } catch (error) {
+      console.warn('⚠️ No se pudo resetear sesión en backend:', error.message);
+    }
+  }, [CHAT_API_URL]);
+
   // Permitir resetear el chat (opcional, útil para UX)
-  const resetChat = useCallback(() => {
+  const resetChat = useCallback(async () => {
+    const oldSessionId = sessionId; // Guardar el ID actual antes de cambiarlo
+    
+    // Resetear estado del frontend
     setMessages([botMessage]);
     setIsTyping(false);
     setShowInitialTyping(true); // Mostrar typing effect al resetear
     sessionStorage.removeItem('chatMessages');
+    
+    // Generar nuevo sessionId
     const newId = generateSessionId();
     setSessionId(newId);
     sessionStorage.setItem('sessionId', newId);
-  }, [botMessage, setMessages, setIsTyping, setShowInitialTyping, setSessionId]);
+    
+    // Notificar al backend para limpiar la sesión anterior
+    await resetSessionOnBackend(oldSessionId);
+    
+    console.log(`🔄 Chat reseteado: ${oldSessionId} → ${newId}`);
+  }, [botMessage, sessionId, resetSessionOnBackend]);
 
   // Exponer resetChat en window para debugging (solo en desarrollo)
   useEffect(() => {

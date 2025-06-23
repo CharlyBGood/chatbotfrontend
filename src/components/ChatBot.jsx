@@ -10,8 +10,8 @@ import { useEffect, useRef, lazy, Suspense } from 'react';
 // Importación lazy del MobileDebugPanel para reducir el bundle size
 const MobileDebugPanel = lazy(() => import('./MobileDebugPanel').then(module => ({ default: module.MobileDebugPanel })));
 
-export function ChatBot({ apiUrl, apiKey, initialMessage, title, /* theme, */ onClose, open = true, enableDebug = false }) {
-  const { messages, isLoading, isTyping, sendMessage, showInitialTyping, typingMessageId, onTypingComplete, resetChat } = useChat(apiUrl || apiKey, initialMessage);
+export function ChatBot({ apiUrl, initialMessage, title, onClose, open = true, enableDebug = false }) {
+  const { messages, isLoading, isTyping, sendMessage, showInitialTyping, typingMessageId, onTypingComplete, resetChat } = useChat(apiUrl, initialMessage);
   const viewport = useViewport();
   const keyboard = useVirtualKeyboard();
   const chatContainerRef = useRef(null); // Ref for the scroll container

@@ -12,47 +12,55 @@ export const ChatHeader = forwardRef(function ChatHeader({ title = "SegurBot", o
         isMobile ? 'mobile-chat-header' : ''
       }`} 
       onClick={onClose}
-    >
-      <div className="flex items-center gap-2 w-85 m-auto relative p-2 ">
-        <ChatFavicon alt="Logo de la Maschio y Asociados" />        <div className='flex flex-col items-center justify-center w-full'>
-          <h1 className="flex-1 text-xl font-semibold text-blueGray text-center mx-auto tracking-widest drop-shadow-md">{title}</h1>
-          <a target='_blank' className='text-blueGray hover:text-lightBlue' href="https://asegurando.online">Maschio y Asociados</a>
+    >      <div className="flex items-center justify-between w-85 m-auto relative p-2">
+        {/* Lado izquierdo - Favicon */}
+        <div className="flex items-center">
+          <ChatFavicon alt="Logo de la Maschio y Asociados" />
         </div>
-          {/* Botón de resetear chat */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onResetChat?.();
-          }}
-          className="text-blueGray text-xl px-2 py-1 hover:text-lightBlue z-10 focus:outline-none cursor-pointer transition-all duration-300 hover:rotate-180"
-          aria-label="Resetear chat"
-          title="Reiniciar conversación"
-          type="button"
-        >
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            className="w-5 h-5" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
-          >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" 
-            />
-          </svg>
-        </button>
         
-        <button
-          onClick={onClose}
-          className="text-blueGray text-3xl px-2 py-1 hover:text-lightBlue z-10 focus:outline-none cursor-pointer transition-colors duration-200"
-          aria-label="Cerrar chat"
-          type="button"
-        >
-          ×
-        </button>
+        {/* Centro - Título y subtítulo */}
+        <div className="flex flex-col items-center justify-center absolute left-1/2 transform -translate-x-1/2">
+          <h1 className="text-xl font-semibold text-blueGray text-center tracking-widest drop-shadow-md">{title}</h1>
+          <a target='_blank' className='text-blueGray hover:text-lightBlue text-sm' href="https://asegurando.online">Maschio y Asociados</a>
+        </div>
+        
+        {/* Lado derecho - Botones */}
+        <div className="flex items-center gap-1">
+          {/* Botón de resetear chat */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onResetChat?.();
+            }}
+            className="text-blueGray text-xl px-2 py-1 hover:text-lightBlue z-10 focus:outline-none cursor-pointer transition-all duration-300 hover:rotate-180"
+            aria-label="Resetear chat"
+            title="Reiniciar conversación"
+            type="button"
+          >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="w-5 h-5" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" 
+              />
+            </svg>
+          </button>
+            <button
+            onClick={onClose}
+            className="text-blueGray text-3xl px-2 py-1 hover:text-lightBlue z-10 focus:outline-none cursor-pointer transition-colors duration-200"
+            aria-label="Cerrar chat"
+            type="button"
+          >
+            ×
+          </button>
+        </div>
       </div>
       <p className="text-sm text-center">
         <a
