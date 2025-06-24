@@ -4,7 +4,8 @@ export function ChatFavicon({ className = '', alt = 'Favicon' }) {
       src="https://res.cloudinary.com/dr8pwzxzn/image/upload/c_thumb,w_200,g_face/v1741819729/logoSolo_qvxfcr.png"
       alt={alt}
       loading="lazy"
-      className={`w-[1.5em] h-[1.25em] ${className}`}
+      className={`w-6 h-5 ${className}`}
+      style={{ width: '1.5rem', height: '1.25rem' }}
     />
   );
 }

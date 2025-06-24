@@ -91,6 +91,9 @@ class SegurBotWidget {
     }
   }  // Inyectar estilos CSS necesarios
   injectStyles() {
+    // Primero intentar cargar el CSS externo
+    this.loadExternalCSS()
+    
     const existingStyles = document.getElementById('segurbot-widget-styles')
     if (existingStyles) return
 
@@ -491,9 +494,50 @@ class SegurBotWidget {
       /* Disabled states */
       #${this.options.containerId} .disabled\\:opacity-50:disabled { opacity: 0.5 !important; }
       #${this.options.containerId} .disabled\\:cursor-not-allowed:disabled { cursor: not-allowed !important; }
-      
-      /* Placeholder styles */
+        /* Placeholder styles */
       #${this.options.containerId} .placeholder-blueGray\\/70::placeholder { color: rgba(211, 221, 230, 0.7) !important; }
+        /* Clases arbitrarias específicas necesarias para el widget */
+      #${this.options.containerId} .h-\\[32em\\] { height: 32em !important; }
+      #${this.options.containerId} .h-\\[44px\\] { height: 44px !important; }
+      #${this.options.containerId} .w-\\[44px\\] { width: 44px !important; }
+      #${this.options.containerId} .min-w-\\[44px\\] { min-width: 44px !important; }
+      #${this.options.containerId} .min-h-\\[44px\\] { min-height: 44px !important; }
+      #${this.options.containerId} .max-w-\\[80\\%\\] { max-width: 80% !important; }
+      #${this.options.containerId} .bottom-25 { bottom: 6.25rem !important; }
+      #${this.options.containerId} .w-85 { width: 21.25rem !important; }
+        /* Transform utilities */
+      #${this.options.containerId} .transform { transform: var(--tw-transform) !important; }
+      #${this.options.containerId} .left-1\\/2 { left: 50% !important; }
+      #${this.options.containerId} .-translate-x-1\\/2 { 
+        --tw-translate-x: -50% !important;
+        transform: translateX(-50%) !important;
+      }
+      #${this.options.containerId} .justify-between { justify-content: space-between !important; }
+      
+      /* Flex utilities adicionales */
+      #${this.options.containerId} .flex-shrink-0 { flex-shrink: 0 !important; }
+      
+      /* Responsive utilities */
+      @media (min-width: 640px) {
+        #${this.options.containerId} .sm\\:bottom-10 { bottom: 2.5rem !important; }
+        #${this.options.containerId} .sm\\:right-6 { right: 1.5rem !important; }
+        #${this.options.containerId} .sm\\:p-3 { padding: 0.75rem !important; }
+        #${this.options.containerId} .sm\\:w-96 { width: 24rem !important; }
+      }
+      
+      /* Emergencia: clases adicionales que pueden faltar */
+      #${this.options.containerId} .border-b { border-bottom-width: 1px !important; }
+      #${this.options.containerId} .rounded-t-lg { 
+        border-top-left-radius: 0.5rem !important; 
+        border-top-right-radius: 0.5rem !important; 
+      }
+      #${this.options.containerId} .rounded-full { border-radius: 50% !important; }
+      #${this.options.containerId} .tracking-widest { letter-spacing: 0.1em !important; }
+      
+      /* Drop shadow específico */
+      #${this.options.containerId} .drop-shadow-\\[0_0_6px_\\#44b0de99\\] { 
+        filter: drop-shadow(0 0 6px rgba(68, 176, 222, 0.6)) !important; 
+      }
       
       /* Chat-specific classes */
       #${this.options.containerId} .chat-window-container { 
@@ -884,6 +928,39 @@ class SegurBotWidget {
     };
     return varMap[varName] || '';
   }
+
+  // Cargar CSS externo automáticamente
+  loadExternalCSS() {
+    // Verificar si ya se cargó el CSS externo
+    const existingLink = document.getElementById('segurbot-widget-external-css')
+    if (existingLink) return
+
+    // Intentar detectar la URL base del script
+    const currentScript = document.currentScript || 
+                         document.querySelector('script[src*="segurbot-widget"]') ||
+                         Array.from(document.scripts).find(s => s.src.includes('segurbot-widget'))
+    
+    if (currentScript && currentScript.src) {
+      const scriptUrl = new URL(currentScript.src)
+      const cssUrl = `${scriptUrl.protocol}//${scriptUrl.host}${scriptUrl.pathname.replace('.umd.cjs', '.css')}`
+      
+      // Crear y cargar el link CSS
+      const link = document.createElement('link')
+      link.id = 'segurbot-widget-external-css'
+      link.rel = 'stylesheet'
+      link.href = cssUrl
+      link.crossOrigin = 'anonymous'
+      
+      // Añadir al head
+      document.head.appendChild(link)
+      
+      if (this.options.enableDebug) {
+        console.log('🎨 SegurBot: Cargando CSS externo desde:', cssUrl)
+      }
+    } else if (this.options.enableDebug) {
+      console.warn('⚠️ SegurBot: No se pudo detectar la URL del CSS externo')
+    }
+  }
 }
 
 // Asegurar que SegurBotWidget esté disponible globalmente INMEDIATAMENTE
@@ -891,16 +968,23 @@ if (typeof window !== 'undefined') {
   window.SegurBotWidget = SegurBotWidget;
 }
 
+// Variable global para prevenir múltiples inicializaciones
+let globalWidgetInitialized = false;
+
 // Auto-inicialización si hay configuración global o data-attributes
-if (typeof window !== 'undefined' && window.SegurBotConfig) {
+if (typeof window !== 'undefined' && window.SegurBotConfig && !globalWidgetInitialized) {
   const widget = new SegurBotWidget(window.SegurBotConfig)
   widget.init()
   window.segurBotWidget = widget
+  globalWidgetInitialized = true
 }
 
 // NUEVA FUNCIONALIDAD: Auto-detección desde script tag
 if (typeof document !== 'undefined') {
   document.addEventListener('DOMContentLoaded', function() {
+    // Solo proceder si no se ha inicializado ya
+    if (globalWidgetInitialized) return;
+    
     // Buscar el script tag que cargó este widget
     const scriptTag = document.querySelector('script[src*="segurbot-widget"]')
     
@@ -920,6 +1004,7 @@ if (typeof document !== 'undefined') {
         const widget = new SegurBotWidget(config)
         widget.init()
         window.segurBotWidget = widget
+        globalWidgetInitialized = true
         
         console.log('✅ SegurBot Widget auto-inicializado desde script tag')
       } else {
@@ -927,11 +1012,6 @@ if (typeof document !== 'undefined') {
       }
     }
   })
-}
-
-// Asegurar que SegurBotWidget esté disponible globalmente INMEDIATAMENTE
-if (typeof window !== 'undefined') {
-  window.SegurBotWidget = SegurBotWidget;
 }
 
 // Exportar para uso como módulo (solo default para UMD)
