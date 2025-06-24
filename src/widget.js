@@ -928,7 +928,6 @@ class SegurBotWidget {
     };
     return varMap[varName] || '';
   }
-
   // Cargar CSS externo automáticamente
   loadExternalCSS() {
     // Verificar si ya se cargó el CSS externo
@@ -942,20 +941,26 @@ class SegurBotWidget {
     
     if (currentScript && currentScript.src) {
       const scriptUrl = new URL(currentScript.src)
-      const cssUrl = `${scriptUrl.protocol}//${scriptUrl.host}${scriptUrl.pathname.replace('.umd.cjs', '.css')}`
       
-      // Crear y cargar el link CSS
-      const link = document.createElement('link')
-      link.id = 'segurbot-widget-external-css'
-      link.rel = 'stylesheet'
-      link.href = cssUrl
-      link.crossOrigin = 'anonymous'
-      
-      // Añadir al head
-      document.head.appendChild(link)
-      
-      if (this.options.enableDebug) {
-        console.log('🎨 SegurBot: Cargando CSS externo desde:', cssUrl)
+      // Solo cargar CSS externo si NO es protocolo file://
+      if (scriptUrl.protocol !== 'file:') {
+        const cssUrl = `${scriptUrl.protocol}//${scriptUrl.host}${scriptUrl.pathname.replace('.umd.cjs', '.css')}`
+        
+        // Crear y cargar el link CSS
+        const link = document.createElement('link')
+        link.id = 'segurbot-widget-external-css'
+        link.rel = 'stylesheet'
+        link.href = cssUrl
+        link.crossOrigin = 'anonymous'
+        
+        // Añadir al head
+        document.head.appendChild(link)
+        
+        if (this.options.enableDebug) {
+          console.log('🎨 SegurBot: Cargando CSS externo desde:', cssUrl)
+        }
+      } else if (this.options.enableDebug) {
+        console.log('💡 SegurBot: Protocolo file:// detectado, usando solo CSS inline (normal en desarrollo local)')
       }
     } else if (this.options.enableDebug) {
       console.warn('⚠️ SegurBot: No se pudo detectar la URL del CSS externo')
