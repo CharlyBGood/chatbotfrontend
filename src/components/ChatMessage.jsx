@@ -72,7 +72,7 @@ export function ChatMessage({ message, isBot, shouldShowTyping = false, onTyping
 
   return (
     <div className={`w-full flex ${isBot ? 'justify-start' : 'justify-end'} mb-2 chat-message`}>
-      <div className={`flex gap-2 items-start max-w-[80%] p-4 rounded-lg ${
+      <div className={`flex gap-2 items-start max-w-[80%] p-3 rounded-lg ${
         isBot 
           ? isInitial 
             ? 'initial-message' 

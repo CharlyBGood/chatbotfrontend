@@ -42,7 +42,7 @@ export function useVirtualKeyboard() {
           Math.abs(latestStateRef.current.keyboardHeight - calculatedKeyboardHeight) > 5 ||
           Math.abs(latestStateRef.current.visualViewportHeight - currentVisualViewportHeight) > 5
         );
-        
+        if (!hasChanged) return; // Evitar renders innecesarios
         if (hasChanged) {
           // Update ref first
           latestStateRef.current = {
@@ -50,7 +50,6 @@ export function useVirtualKeyboard() {
             keyboardHeight: calculatedKeyboardHeight,
             visualViewportHeight: currentVisualViewportHeight
           };
-          
           // Then update state
           setViewportHeight(currentViewportHeight);
           setVisualViewportHeight(currentVisualViewportHeight);

@@ -119,14 +119,24 @@ export function ChatBot({ apiUrl, initialMessage, title, onClose, open = true, e
           </Suspense>
         )}
         <MobileChatLayout isMobile={isMobile}>
-          {chatContent}
+          <div
+            className={
+              'bg-bgDarkBlue rounded-t-lg shadow-2xl flex flex-col w-full min-h-screen h-[100dvh] transition-all duration-500 ease-in-out'
+            }
+            style={{
+              // Quitar fixed y dejar que el flujo flex-col controle el layout
+              willChange: 'height',
+            }}
+          >
+            {chatContent}
+          </div>
         </MobileChatLayout>
       </>
     );
   }
 
   return (
-    <div className="fixed bottom-25 rounded-lg right-12 z-50 bg-bgDarkBlue shadow-2xl flex flex-col w-80 sm:w-96 h-[32em]">
+    <div className="fixed bottom-25 rounded-lg right-12 z-50 bg-bgDarkBlue shadow-2xl flex flex-col w-80 sm:w-96 h-[32em] transition-all duration-500 ease-in-out" style={{ willChange: 'transform, height' }}>
       {chatContent}
     </div>
   );

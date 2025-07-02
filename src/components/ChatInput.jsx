@@ -53,12 +53,16 @@ export const ChatInput = forwardRef(function ChatInput({ onSendMessage, isLoadin
   return (
     <footer 
       ref={ref}
-      className={`border-t border-lightBlue/20 rounded-b-lg flex-shrink-0 ${
+      className={`border-t border-lightBlue/20 rounded-b-lg flex-shrink-0 transition-all duration-500 ease-in-out ${
         isMobile 
           ? 'mobile-chat-footer bg-Blue pb-safe' 
           : 'bg-Blue shadow-lg'
       }`}
-      style={{ fontSize: isMobile ? '16px' : '14px' }}
+      style={{
+        fontSize: isMobile ? '16px' : '14px',
+        // Quitar transform para restaurar el layout natural
+        willChange: 'height',
+      }}
     >
       <form onSubmit={handleSubmit} className="w-full">
         <div className="flex items-end gap-1 w-full p-2 px-4">

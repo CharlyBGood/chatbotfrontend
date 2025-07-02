@@ -41,11 +41,12 @@ function SegurBot({ apiKey, initialMessage }) {
       {/* Launcher button */}
       <button
         onClick={() => setOpen(!open)}
-        className={`fixed z-40 bottom-16 sm:bottom-10 right-4 sm:right-6 bg-bgDarkBlue hover:bg-Blue p-2 sm:p-3 rounded-full shadow-lg border-4 border-lightBlue drop-shadow-[0_0_6px_#44b0de99] transition-all duration-1000 ease-in-out transform cursor-pointer
+        className={`fixed z-50 bottom-16 sm:bottom-10 right-4 sm:right-6 bg-bgDarkBlue hover:bg-Blue p-2 sm:p-3 rounded-full shadow-lg border-4 border-lightBlue drop-shadow-[0_0_6px_#44b0de99] transition-all duration-500 ease-in-out transform cursor-pointer
         ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}
         ${isPulsing ? "scale-110 shadow-xl" : "scale-100 shadow-lg"}`}
         aria-label={open ? "Cerrar chat" : "Abrir chat"}
         title={open ? "Cerrar chat" : "Abrir chat"}
+        style={{ willChange: 'transform, opacity' }}
       >
         {open ? (
           <FaCircleExclamation className="text-2xl text-lightBlue hover:text-lightBlueHover" title="Cerrar chat" aria-label="Cerrar chat" />
