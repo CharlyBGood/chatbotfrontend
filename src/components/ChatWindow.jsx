@@ -2,7 +2,7 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { ChatMessage } from './ChatMessage';
 import TypingIndicator from './TypingIndicator';
 
-export function ChatWindow({ messages, availableHeight, isKeyboardOpen, scrollContainerRef, isTyping, showInitialTyping = false, typingMessageId, onTypingComplete }) {
+export function ChatWindow({ messages, availableHeight, isKeyboardOpen, scrollContainerRef, isTyping, showInitialTyping = false, typingMessageId, onTypingComplete, onSendMessage }) {
   const messagesEndRef = useRef(null);
   const containerRef = scrollContainerRef; // Use the scroll container ref from parent
   const scrollTimeoutRef = useRef(null);
@@ -43,7 +43,7 @@ export function ChatWindow({ messages, availableHeight, isKeyboardOpen, scrollCo
       
       // Solo logear nuevos mensajes del bot
       if (isNewBotMessage && lastMessage !== lastMessageRef.current) {
-        console.log('🤖 New bot message added');
+        // console.log('🤖 New bot message added');
         lastMessageRef.current = lastMessage;
       }
     }
@@ -164,11 +164,13 @@ export function ChatWindow({ messages, availableHeight, isKeyboardOpen, scrollCo
       <div key={message.id || index} className="flex-shrink-0">        <ChatMessage
           message={message.content}
           isBot={message.isBot}
+          isInitial={message.isInitial}
           shouldShowTyping={
             (message.isInitial && showInitialTyping) ||
             (message.id && message.id === typingMessageId && message.shouldShowTyping)
           }
           onTypingComplete={() => message.id && onTypingComplete(message.id)}
+          onSendMessage={onSendMessage}
         />
       </div>
     ))}

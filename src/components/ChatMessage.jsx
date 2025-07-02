@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useState, useEffect, useRef } from 'react';
 
-export function ChatMessage({ message, isBot, shouldShowTyping = false, onTypingComplete }) {  // Estados para el efecto typewriter palabra por palabra
+export function ChatMessage({ message, isBot, shouldShowTyping = false, onTypingComplete, isInitial = false, onSendMessage }) {  // Estados para el efecto typewriter palabra por palabra
   const [isVisible, setIsVisible] = useState(!shouldShowTyping);
   const [showContent, setShowContent] = useState(!shouldShowTyping);
   const [displayedText, setDisplayedText] = useState(!shouldShowTyping ? message : '');
@@ -71,13 +71,19 @@ export function ChatMessage({ message, isBot, shouldShowTyping = false, onTyping
   }, [message, shouldShowTyping, isBot]);
 
   return (
-    <div className={`w-full flex ${isBot ? 'justify-start' : 'justify-end'} mb-2`}>
-      <div className={`flex gap-2 items-start max-w-[80%] ${isBot ? 'bg-bgDarkBlue/10 border border-bgDarkBlue/20' : 'bg-lightBlue/5 border border-lightBlue/20'} p-4 rounded-lg`}>
+    <div className={`w-full flex ${isBot ? 'justify-start' : 'justify-end'} mb-2 chat-message`}>
+      <div className={`flex gap-2 items-start max-w-[80%] p-4 rounded-lg ${
+        isBot 
+          ? isInitial 
+            ? 'initial-message' 
+            : 'bot-message'
+          : 'user-message'
+      } ${isInitial ? 'animate-pulse-soft' : ''}`}>
         {isBot ? (
           <ChatFavicon alt="Bot Logo" />
         ) : null}        {isBot ? (
           <div
-            className={`flex-1 text-blueGray break-words w-full transition-opacity duration-300 ${showContent ? (isVisible ? 'opacity-100' : 'opacity-0') : 'opacity-0'
+            className={`flex-1 text-gray-200 break-words break-all w-full transition-opacity duration-300 overflow-wrap-anywhere ${showContent ? (isVisible ? 'opacity-100' : 'opacity-0') : 'opacity-0'
               }`}
           >            {showContent && (
             <>
@@ -85,20 +91,44 @@ export function ChatMessage({ message, isBot, shouldShowTyping = false, onTyping
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
-                    // Solo mantenemos los links personalizados para WhatsApp y ATM
                     a: (props) => {
                       const href = props.href || '';
                       const isWhatsAppUrl = href.includes('whatsapp.com') || href.includes('wa.me');
-                      const isAtmUrl = href.toLowerCase().includes('atm');
+                      const isAtmUrl = href.includes('ecommerce.atmseguros.com.ar') || href.includes('tinyurl.com/cotizaconMaschioenAtm');
+                      
+                      // Si es un link interno para generar mensajes (auto, hogar, vida, empresa)
+                      const isInternalCommand = ['auto', 'hogar', 'vida', 'empresa'].includes(href.toLowerCase());
+                      
+                      if (isInternalCommand && onSendMessage) {
+                        return (
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              const command = href.toLowerCase();
+                              const messages = {
+                                auto: 'Quiero cotizar un seguro para mi auto',
+                                hogar: 'Quiero cotizar un seguro para mi casa',
+                                vida: 'Quiero cotizar un seguro de vida',
+                                empresa: 'Quiero cotizar un seguro para mi empresa'
+                              };
+                              onSendMessage(messages[command] || command);
+                            }}
+                            className="clickable-option-btn"
+                          >
+                            {props.children}
+                          </button>
+                        );
+                      }
 
                       return (
                         <a
                           {...props}
                           target="_blank"
                           rel="noopener noreferrer"
+                          className={isAtmUrl ? '' : 'text-lightBlue hover:text-lightBlueHover underline transition-colors duration-200'}
+                          title={isWhatsAppUrl && href.includes('text=') ? decodeURIComponent(href.split('text=')[1].replace(/\+/g, ' ')) : undefined}
                         >
-                          {isWhatsAppUrl ? 'WhatsApp de Maschio y Asociados' :
-                            isAtmUrl ? 'Cotizar con ATM' : props.children}
+                          {isWhatsAppUrl ? 'Hablemos por WhatsApp' : isAtmUrl ? '⚡ Cotizá con ATM' : props.children}
                         </a>
                       );
                     }
@@ -115,7 +145,7 @@ export function ChatMessage({ message, isBot, shouldShowTyping = false, onTyping
           </div>
         ) : (
           <>
-            <p className="flex-1 text-blueGray whitespace-pre-wrap break-words w-full">{message}</p>
+            <p className="flex-1 text-gray-200 whitespace-pre-wrap break-words w-full">{message}</p>
             <User className="w-6 h-6 text-lightBlue flex-shrink-0" />
           </>
         )}      </div>

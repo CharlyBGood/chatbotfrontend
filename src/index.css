@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+
 @theme {
   --color-Blue: #253878;
   --color-bgDarkBlue: #03070f;
@@ -14,16 +15,114 @@
   --my-drop-shadow: 4px 3px 2px #03070f;
 }
 
-html {
-  height: -webkit-fill-available;
+
+::-webkit-scrollbar {
+  width: .7em;
 }
 
-body {
-  height: 100vh;
-  height: -webkit-fill-available;
+::-webkit-scrollbar-track {
+  background: var(--color-bgDarkBlue);
+  border-radius: 100vw;
 }
 
-/* Variables CSS para dimensiones dinámicas */
+::-webkit-scrollbar-thumb {
+  background: var(--color-lightBlue);
+  border-radius: 100vw;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-lightBlueHover);
+}
+
+@supports (scrollbar-color: red blue) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-lightBlue) var(--color-bgDarkBlue);
+  }
+}
+
+* {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body,
+::after,
+::before {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  font-family: "Federo", sans-serif;
+  font-size: 15px;
+}
+
+/*  TAILWIND CLASSES */
+
+/* image prefooter superintendencia de seguros */
+
+.img-prefooter {
+  @apply flex w-full bg-[#ffffff] my-0 m-auto;
+}
+
+.img-prefooter img {
+  @apply w-2/5 my-0 m-auto;
+}
+
+@media screen and (max-width: 850px) {
+  .img-prefooter img {
+    @apply w-3/4 my-0 m-auto;
+  }
+}
+
+/* image prefooter superintendencia de seguros */
+
+.wsp-link {
+  @apply fixed block h-auto left-[90%] bottom-[7%] opacity-[.9];
+}
+
+.wsp-icon {
+  @apply relative p-2;
+}
+
+.wsp-icon:hover {
+  @apply w-20;
+}
+
+.wsp-icon:active {
+  @apply p-2;
+}
+
+.footer-container {
+  @apply flex justify-evenly p-3 items-center;
+}
+
+/* navbar styles */
+
+.header-logo-name {
+  width: 14em;
+}
+
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s infinite;
+}
+
+
+@media screen and (max-width: 850px) {
+  .header-logo-name {
+    width: 10em;
+  }
+}
+
 :root {
   --viewport-height: 100vh;
   --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
@@ -40,14 +139,40 @@ body {
     height: 100vh;
     height: -webkit-fill-available;
     height: var(--viewport-height, 100vh);
-    overflow: hidden;
+    /* overflow: hidden; */
+    overflow-x: hidden;
   }
   
   body {
-    overflow: hidden;
+    /* overflow: hidden; */
+    overflow-x: hidden;
     position: relative;
     height: 100vh;
     height: -webkit-fill-available;
+    /* Ocultar scrollbar en móviles pero mantener funcionalidad */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+  
+  /* Ocultar scrollbar en móviles para WebKit browsers */
+  body::-webkit-scrollbar {
+    display: none;
+    width: 0 !important;
+    background: transparent;
+  }
+  
+  /* Aplicar también a elementos principales que puedan tener scroll */
+  html::-webkit-scrollbar,
+  .main-content::-webkit-scrollbar,
+  #root::-webkit-scrollbar {
+    display: none;
+    width: 0 !important;
+  }
+  
+  /* Asegurar que el scroll funcione pero sin barra visible */
+  html, body, #root {
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE/Edge */
   }
   
   .mobile-chat-container {
@@ -145,7 +270,7 @@ body {
     transform: translateZ(0);
     appearance: none;
     -webkit-appearance: none;
-    border-radius: 0;
+    /* border-radius: 0; */
   }
   
   /* Prevenir scroll del body cuando el chat está activo */
@@ -159,36 +284,6 @@ body {
     -webkit-overflow-scrolling: auto !important;
     overscroll-behavior: none !important;
   }
-}
-
-/* ========================================
-   SCROLLBAR STYLES - FIXED FOR DESKTOP
-   ======================================== */
-
-/* Base scrollbar styles for all elements */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(68, 176, 222, 0.6) rgba(3, 7, 15, 0.3);
-}
-
-*::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-*::-webkit-scrollbar-track {
-  background: rgba(3, 7, 15, 0.3);
-  border-radius: 4px;
-}
-
-*::-webkit-scrollbar-thumb {
-  background: rgba(68, 176, 222, 0.6);
-  border-radius: 4px;
-  border: 1px solid rgba(3, 7, 15, 0.2);
-}
-
-*::-webkit-scrollbar-thumb:hover {
-  background: rgba(68, 176, 222, 0.8);
 }
 
 /* SCROLLBAR SOLUTION - APPLIED TO CORRECT CONTAINER */
@@ -258,27 +353,12 @@ html body .chat-window-container::-webkit-scrollbar-thumb:active {
   }
 }
 
-@supports (scrollbar-color: red blue) {
+/* @supports (scrollbar-color: red blue) {
   * {
     scrollbar-color: hsla(220 67% 4% 0.81 / 1) hsla(194, 66%, 44%, 0.782);
   }
-}
+} */
 
-* {
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-body,
-::after,
-::before {
-  padding: 0;
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  font-family: "Federo", sans-serif;
-  font-size: 15px;
-}
 
 /* Efecto de sombreado personalizado para texto */
 .text-shadow {
@@ -287,7 +367,15 @@ body,
 
 /* Estilos globales para contenido markdown en mensajes del bot */
 .bot-message-content {
-  line-height: 1.5;
+  line-height: 1.6;
+  position: relative;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: manual;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  white-space: normal;
 }
 
 .bot-message-content > *:first-child {
@@ -310,8 +398,8 @@ body,
   font-weight: 600;
 }
 
-.bot-message-content h1 { font-size: 1.25rem; }
-.bot-message-content h2 { font-size: 1.125rem; }
+.bot-message-content h1 { font-size: 1.1rem; }
+.bot-message-content h2 { font-size: 1.05rem; }
 .bot-message-content h3 { font-size: 1rem; }
 
 /* Párrafos con espaciado mínimo */
@@ -329,7 +417,21 @@ body,
 }
 
 .bot-message-content li {
-  margin-bottom: 0.125rem;
+  margin: 0.3rem 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.bot-message-content li:hover {
+  background: linear-gradient(90deg, 
+    rgba(68, 176, 222, 0.1) 0%, 
+    rgba(68, 176, 222, 0.05) 100%);
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.25rem;
+  transform: translateX(3px);
+  transition: all 0.2s ease;
+  box-shadow: 0 0 8px rgba(68, 176, 222, 0.2);
 }
 
 .bot-message-content ul {
@@ -383,4 +485,416 @@ body,
 
 .bot-message-content a:hover {
   color: #3b82f6;
+}
+
+/* Estilos simplificados para mensajes del bot */
+.bot-message-content h1,
+.bot-message-content h2,
+.bot-message-content h3 {
+  color: var(--color-lightBlue);
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+.bot-message-content strong {
+  color: var(--color-lightBlue);
+  font-weight: 700;
+}
+
+.bot-message-content em {
+  color: var(--color-Golden);
+  font-style: italic;
+}
+
+.bot-message-content a {
+  color: var(--color-lightBlue);
+}
+
+.bot-message-content p {
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Primer párrafo destacado pero legible */
+.bot-message-content p:first-child {
+  color: var(--color-justGray) !important;
+  font-size: 1rem !important;
+  font-weight: bold !important;
+}
+
+.bot-message-content em {
+  color: var(--color-Golden);
+  font-style: italic;
+}
+
+/* Animación suave para el mensaje inicial */
+@keyframes pulse-soft {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(68, 176, 222, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(68, 176, 222, 0.4);
+  }
+}
+
+.animate-pulse-soft {
+  animation: animate-pulse-soft 2s ease-in-out infinite;
+}
+
+/* Mejorar visualización de las opciones rápidas */
+.bot-message-content p:contains("Opciones rápidas") {
+  background: linear-gradient(90deg, 
+    rgba(247, 209, 110, 0.1) 0%, 
+    rgba(247, 209, 110, 0.05) 100%);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border-left: 3px solid var(--color-Golden);
+  margin: 0.5rem 0;
+}
+
+/* Efectos hover mejorados para las listas */
+.bot-message-content li:hover {
+  background: linear-gradient(90deg, 
+    rgba(68, 176, 222, 0.15) 0%, 
+    rgba(68, 176, 222, 0.08) 100%);
+  padding: 0.3rem 0.7rem;
+  border-radius: 0.5rem;
+  transform: translateX(5px) scale(1.02);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 12px rgba(68, 176, 222, 0.25);
+  cursor: pointer;
+}
+
+/* Estilos para palabras clave sin animación */
+.bot-message-content strong {
+  color: var(--color-lightBlue);
+}
+
+/* Efectos especiales para el mensaje inicial completo */
+.bot-message-content {
+  position: relative;
+}
+
+/* Estilos especiales para el mensaje de bienvenida */
+.initial-message {
+  background: linear-gradient(135deg, 
+    rgba(68, 176, 222, 0.08) 0%, 
+    rgba(37, 99, 235, 0.05) 50%,
+    rgba(68, 176, 222, 0.12) 100%);
+  border: 1px solid rgba(68, 176, 222, 0.4);
+  border-left: 4px solid rgba(68, 176, 222, 0.8);
+  box-shadow: 
+    0 4px 15px rgba(68, 176, 222, 0.15),
+    0 0 25px rgba(68, 176, 222, 0.05);
+  position: relative;
+  animation: welcome-glow 4s ease-in-out infinite;
+}
+
+.initial-message::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(68, 176, 222, 0.8), transparent);
+  animation: shimmer-welcome 2s ease-in-out infinite;
+}
+
+.initial-message .bot-message-content h1 {
+  color: #44b0de;
+  margin-bottom: 0.5rem;
+}
+
+.initial-message .bot-message-content h2 {
+  color: #3a9ecb;
+  margin-bottom: 0.5rem;
+}
+
+.initial-message .bot-message-content h3 {
+  color: #44b0de;
+}
+
+.initial-message .bot-message-content blockquote {
+  background: linear-gradient(135deg, 
+    rgba(68, 176, 222, 0.2) 0%, 
+    rgba(37, 99, 235, 0.15) 100%);
+  border-left: 4px solid #44b0de;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0;
+  border-radius: 0.5rem;
+  position: relative;
+}
+
+.initial-message .bot-message-content blockquote::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #44b0de, #3a9ecb);
+  animation: pulse-border 2s ease-in-out infinite;
+}
+
+.initial-message .bot-message-content hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #44b0de, transparent);
+  margin: 1rem 0;
+  animation: pulse-divider 3s ease-in-out infinite;
+}
+
+/* Asegurar legibilidad en el mensaje inicial */
+.initial-message .bot-message-content {
+  color: var(--color-blueGray);
+}
+
+.initial-message .bot-message-content p:first-child {
+  color: var(--color-justGray);
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+/* Asegurar máxima legibilidad en todos los elementos del mensaje inicial */
+.initial-message .bot-message-content p,
+.initial-message .bot-message-content span,
+.initial-message .bot-message-content div {
+  color: #e5e7eb !important; /* Gris claro legible */
+  opacity: 1;
+}
+
+.initial-message .bot-message-content strong {
+  color: var(--color-lightBlue) !important;
+}
+
+.initial-message .bot-message-content em {
+  color: var(--color-Golden) !important;
+}
+
+/* Primer párrafo destacado pero legible */
+.bot-message-content p:first-child {
+  color: var(--color-blueGray) !important;
+  font-size: 1rem !important;
+  font-weight: bold !important;
+}
+
+/* Animaciones para el mensaje inicial */
+@keyframes welcome-glow {
+  0%, 100% {
+    box-shadow: 
+      0 4px 15px rgba(68, 176, 222, 0.15),
+      0 0 25px rgba(68, 176, 222, 0.05);
+  }
+  50% {
+    box-shadow: 
+      0 6px 20px rgba(68, 176, 222, 0.2),
+      0 0 35px rgba(68, 176, 222, 0.08);
+  }
+}
+
+@keyframes shimmer-welcome {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scaleX(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1.5);
+  }
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-divider {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scaleX(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1.2);
+  }
+}
+
+@keyframes animate-pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Estilos para mensajes normales del bot (no iniciales) */
+.bot-message {
+  background: rgba(68, 176, 222, 0.08);
+  border: 1px solid rgba(68, 176, 222, 0.2);
+  border-radius: 0.75rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.bot-message:hover {
+  background: rgba(68, 176, 222, 0.12);
+  border-color: rgba(68, 176, 222, 0.3);
+}
+
+.bot-message .bot-message-content {
+  color: #e5e7eb !important; /* Gris claro legible */
+  text-shadow: none;
+  filter: none;
+}
+
+.bot-message .bot-message-content *:not(a):not(strong > a):not(em > a) {
+  color: inherit !important;
+  text-shadow: none;
+  filter: none;
+}
+
+/* === LED Light Background Effect (desktop only) === */
+@media (min-width: 769px) {
+  body::before {
+    content: '';
+    position: fixed;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    opacity: 0.18;
+    background:
+      radial-gradient(circle at 10% 20%, var(--color-lightBlue) 0, transparent 40%),
+      radial-gradient(circle at 80% 10%, var(--color-Golden) 0, transparent 50%),
+      radial-gradient(circle at 90% 80%, var(--color-Blue) 0, transparent 60%),
+      radial-gradient(circle at 50% 60%, var(--color-lightBlueHover) 0, transparent 55%);
+    animation: led-bg-move 18s linear infinite alternate;
+    transition: opacity 0.5s;
+  }
+}
+
+@keyframes led-bg-move {
+  0% {
+    filter: blur(0.5rem) brightness(1.1);
+    background-position:
+      10% 20%,
+      80% 10%,
+      90% 80%,
+      50% 60%;
+  }
+  50% {
+    filter: blur(1.2rem) brightness(1.2);
+    background-position:
+      20% 30%,
+      70% 20%,
+      80% 70%,
+      60% 70%;
+  }
+  100% {
+    filter: blur(0.7rem) brightness(1.05);
+    background-position:
+      15% 25%,
+      85% 15%,
+      95% 85%,
+      55% 65%;
+  }
+}
+
+/* =====================
+   Efecto LED sofisticado en espacios en blanco (solo desktop)
+   ===================== */
+@media (min-width: 1024px) {
+  body::before {
+    content: '';
+    position: fixed;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    opacity: 0.18;
+    /* Tres gradientes circulares en tonos de la paleta */
+    background:
+      radial-gradient(circle at 15% 20%, var(--color-lightBlue) 0, transparent 40%),
+      radial-gradient(circle at 80% 30%, var(--color-Golden) 0, transparent 45%),
+      radial-gradient(circle at 60% 80%, var(--color-Blue) 0, transparent 50%);
+    filter: blur(32px) brightness(1.1) saturate(1.2);
+    animation: led-lights-move 18s ease-in-out infinite alternate;
+    transition: opacity 0.5s;
+  }
+}
+
+@keyframes led-lights-move {
+  0% {
+    background-position:
+      15% 20%,
+      80% 30%,
+      60% 80%;
+  }
+  50% {
+    background-position:
+      20% 25%,
+      75% 35%,
+      65% 75%;
+  }
+  100% {
+    background-position:
+      10% 15%,
+      85% 25%,
+      55% 85%;
+  }
+}
+
+/* Asegurar stacking correcto: el contenido principal debe tener z-index > 0 si es necesario */
+#root, main, .main-content {
+  position: relative;
+  z-index: 1;
+}
+
+body {
+  position: relative;
+  z-index: 1;
+}
+
+/* Asegura que el contenido esté por encima del fondo led */
+#root, main, .main-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* =====================
+   Neon Underline Utility (solo desktop, para Partners y CTA)
+   ===================== */
+@media (min-width: 1024px) {
+  .neon-underline {
+    width: 80%;
+    max-width: 340px;
+    height: 5px;
+    margin: 1.2rem auto 0 auto;
+    border-radius: 8px;
+    background: linear-gradient(90deg,
+      var(--color-lightBlue) 0%,
+      var(--color-Golden) 50%,
+      var(--color-Blue) 100%
+    );
+    box-shadow:
+      0 0 8px 2px var(--color-lightBlue),
+      0 0 12px 4px var(--color-Golden),
+      0 0 10px 2px var(--color-Blue);
+    opacity: 0.32;
+    filter: blur(0.5px) brightness(1.1);
+    pointer-events: none;
+    position: static;
+    display: block;
+    transition: opacity 0.3s;
+  }
 }

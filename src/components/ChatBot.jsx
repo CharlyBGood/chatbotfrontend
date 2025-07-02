@@ -15,28 +15,28 @@ export function ChatBot({ apiUrl, initialMessage, title, onClose, open = true, e
   const viewport = useViewport();
   const keyboard = useVirtualKeyboard();
   const chatContainerRef = useRef(null); // Ref for the scroll container
-  
+
   // Función debug para resetear chat desde consola
   useEffect(() => {
     if (enableDebug) {
       window.resetChatDebug = resetChat;
       console.log('🔧 Debug mode enabled. Use window.resetChatDebug() to reset chat');
-      
+
       return () => {
         delete window.resetChatDebug;
       };
     }
   }, [resetChat, enableDebug]);
-  
-  const { 
-    isMobile, 
-    headerRef, 
-    footerRef, 
+
+  const {
+    isMobile,
+    headerRef,
+    footerRef,
     headerHeight,
     footerHeight
   } = viewport;
-    // Calcular altura disponible más precisamente
-  const availableHeight = keyboard.isKeyboardVisible 
+  // Calcular altura disponible más precisamente
+  const availableHeight = keyboard.isKeyboardVisible
     ? Math.max(120, keyboard.visualViewportHeight - headerHeight - footerHeight)
     : Math.max(120, viewport.visualViewportHeight - headerHeight - footerHeight);
 
@@ -48,8 +48,8 @@ export function ChatBot({ apiUrl, initialMessage, title, onClose, open = true, e
       document.body.style.position = 'fixed';
       document.body.style.width = '100%';
       document.body.style.height = '100%';
-      
-      return () => { 
+
+      return () => {
         document.body.classList.remove('chat-open');
         document.body.style.overflow = '';
         document.body.style.position = '';
@@ -61,7 +61,7 @@ export function ChatBot({ apiUrl, initialMessage, title, onClose, open = true, e
 
   const chatContent = (
     <>
-      <ChatHeader ref={headerRef} title={title} onClose={onClose} onResetChat={resetChat} />      <div 
+      <ChatHeader ref={headerRef} title={title} onClose={onClose} onResetChat={resetChat} />      <div
         ref={chatContainerRef}
         className="flex-1 bg-bgDarkBlue min-h-0 chat-window-container"
         style={isMobile ? {
@@ -75,7 +75,7 @@ export function ChatBot({ apiUrl, initialMessage, title, onClose, open = true, e
           overflowX: 'hidden'
         }}
       >        <ChatWindow
-          messages={messages} 
+          messages={messages}
           availableHeight={isMobile ? availableHeight : undefined}
           isKeyboardOpen={keyboard.isKeyboardVisible}
           scrollContainerRef={chatContainerRef}
@@ -83,13 +83,14 @@ export function ChatBot({ apiUrl, initialMessage, title, onClose, open = true, e
           showInitialTyping={showInitialTyping}
           typingMessageId={typingMessageId}
           onTypingComplete={onTypingComplete}
+          onSendMessage={sendMessage}
         />
       </div>
-      <ChatInput 
+      <ChatInput
         ref={footerRef}
-        onSendMessage={sendMessage} 
-        isLoading={isLoading} 
-        isMobile={isMobile} 
+        onSendMessage={sendMessage}
+        isLoading={isLoading}
+        isMobile={isMobile}
       />
     </>
   );
@@ -125,7 +126,7 @@ export function ChatBot({ apiUrl, initialMessage, title, onClose, open = true, e
   }
 
   return (
-    <div className="fixed bottom-25 right-12 z-50 bg-bgDarkBlue shadow-2xl flex flex-col w-80 sm:w-96 h-[32em]">
+    <div className="fixed bottom-25 rounded-lg right-12 z-50 bg-bgDarkBlue shadow-2xl flex flex-col w-80 sm:w-96 h-[32em]">
       {chatContent}
     </div>
   );
