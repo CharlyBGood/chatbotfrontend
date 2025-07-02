@@ -13,6 +13,7 @@ export function useInputPositioning(isMobile) {
       clearTimeout(timeoutRef.current);
     }
 
+    // Esperar un poco más para asegurar que el layout y el teclado estén listos
     timeoutRef.current = setTimeout(() => {
       requestAnimationFrame(() => {
         if (!inputRef.current) return;
@@ -33,16 +34,18 @@ export function useInputPositioning(isMobile) {
         if (!isInputFullyVisible) {
           // Calcular cuánto necesitamos desplazar para que el input sea visible
           const distanceToBottom = inputBottom - (visibleAreaBottom - safeMargin);
-          
           if (distanceToBottom > 0) {
             // El input está parcialmente fuera de la vista, hacer scroll mínimo
             const chatContainer = inputRef.current.closest('.mobile-chat-container');
             if (chatContainer) {
               const chatWindow = chatContainer.querySelector('.mobile-chat-window');
               if (chatWindow) {
-                chatWindow.scrollBy({
-                  top: distanceToBottom,
-                  behavior: 'smooth'
+                // Esperar un frame extra para asegurar layout
+                requestAnimationFrame(() => {
+                  chatWindow.scrollBy({
+                    top: distanceToBottom,
+                    behavior: 'smooth'
+                  });
                 });
               }
             }
@@ -57,10 +60,10 @@ export function useInputPositioning(isMobile) {
                 inline: 'nearest'
               });
             }
-          }, 100);
+          }, 150); // Esperar un poco más
         }
       });
-    }, 100);
+    }, 200); // Esperar más para asegurar que el teclado esté visible
   }, [isMobile]);
 
   const handleFocus = useCallback(() => {

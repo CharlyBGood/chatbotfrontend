@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { ChatMessage } from './ChatMessage';
 import TypingIndicator from './TypingIndicator';
+// import { useVirtualKeyboard } from '../hooks/useVirtualKeyboard';
 
 export function ChatWindow({ messages, availableHeight, isKeyboardOpen, scrollContainerRef, isTyping, showInitialTyping = false, typingMessageId, onTypingComplete, onSendMessage }) {
   const messagesEndRef = useRef(null);
@@ -148,30 +149,20 @@ export function ChatWindow({ messages, availableHeight, isKeyboardOpen, scrollCo
         clearTimeout(scrollTimeoutRef.current);
       }
     };
-  }, []);
-  const dynamicStyle = availableHeight ? {
-    // Quitar height fija, solo usar maxHeight para permitir crecer si el teclado no está visible
+  }, []);const dynamicStyle = availableHeight ? {
+    height: `${availableHeight}px`,
     maxHeight: `${availableHeight}px`,
-    minHeight: '120px',
-    transition: 'all 0.5s cubic-bezier(0.4,0,0.2,1)',
-    willChange: 'height',
-    overflowY: 'auto',
+    minHeight: '120px', // Altura mínima para evitar problemas
     // Removed overflow properties - now handled by parent container
   } : {
-    transition: 'all 0.5s cubic-bezier(0.4,0,0.2,1)',
-    willChange: 'height',
-    overflowY: 'auto',
     // Removed overflow properties - now handled by parent container
-  };
-  return (
-    <main
-      className="w-full flex flex-col bg-bgDarkBlue p-2 sm:p-4 space-y-2 sm:space-y-4 mobile-chat-window transition-all duration-500 ease-in-out"
-      style={dynamicStyle}
-    >
-      {/* Espaciador para asegurar que el primer mensaje (inicial) siempre sea visible */}
-      <div className="flex-shrink-0 h-2" />
-      {messages.map((message, index) => (
-        <div key={message.id || index} className="flex-shrink-0">        <ChatMessage
+  }; return (<main
+    className="w-full flex flex-col bg-bgDarkBlue p-2 sm:p-4 space-y-2 sm:space-y-4 mobile-chat-window"
+    style={dynamicStyle}
+  >
+    {/* Espaciador para asegurar que el primer mensaje (inicial) siempre sea visible */}
+    <div className="flex-shrink-0 h-2" />    {messages.map((message, index) => (
+      <div key={message.id || index} className="flex-shrink-0">        <ChatMessage
           message={message.content}
           isBot={message.isBot}
           isInitial={message.isInitial}

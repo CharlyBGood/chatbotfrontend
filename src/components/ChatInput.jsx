@@ -16,26 +16,17 @@ export const ChatInput = forwardRef(function ChatInput({ onSendMessage, isLoadin
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
+    // Guardar el elemento activo antes de limpiar
+    const active = document.activeElement;
     onSendMessage(input);
-    setInput('');
-  };
-  useEffect(() => {
-    if (!isLoading && input === '' && internalInputRef.current) {
-      internalInputRef.current.focus();
-    }
-  }, [isLoading, input]);
-
-  useEffect(() => {
-    if (internalInputRef.current) {
-      internalInputRef.current.style.height = 'auto';
-      internalInputRef.current.style.height = internalInputRef.current.scrollHeight + 'px';
-      
-      // Asegurar visibilidad después de cambiar el tamaño
-      if (isMobile && document.activeElement === internalInputRef.current) {
-        ensureInputVisibility();
+    setTimeout(() => {
+      setInput('');
+      // Si el textarea tenía el foco, intentar mantenerlo (sin forzar focus si el usuario lo quitó)
+      if (active && typeof active.focus === 'function' && document.activeElement !== active) {
+        active.focus();
       }
-    }
-  }, [input, isMobile, ensureInputVisibility]);
+    }, 10);
+  };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
